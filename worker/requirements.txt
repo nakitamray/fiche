@@ -1,0 +1,4 @@
+fastapi==0.115.6
+uvicorn==0.34.0
+pint==0.24.4
+typst==0.12.2
