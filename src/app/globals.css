@@ -1,0 +1,164 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cream: #f4efe6;
+  --grout: #e2d9c8;
+  --parchment: #faf7f2;
+  --oxblood: #6b2428;
+  --awning: #3b4d3b;
+  --ink: #2a211c;
+  --tile: 34px;
+}
+
+html {
+  background: var(--cream);
+}
+
+body {
+  color: var(--ink);
+  background-color: var(--cream);
+  /* tiled bistro wall: 1px grout lines on a 34px grid */
+  background-image:
+    linear-gradient(var(--grout) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grout) 1px, transparent 1px);
+  background-size: var(--tile) var(--tile);
+  background-position: -1px -1px;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: #6b242833;
+}
+
+@layer components {
+  .paper {
+    background-color: var(--parchment);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .42  0 0 0 0 .33  0 0 0 0 .24  0 0 0 .05 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    border: 1px solid #ddd2bf;
+  }
+
+  .label {
+    @apply font-mono text-[11px] uppercase tracking-[0.14em];
+  }
+
+  .btn {
+    @apply label inline-flex items-center gap-2 border px-3 py-2 transition-colors disabled:cursor-not-allowed disabled:opacity-40;
+  }
+  .btn-ox {
+    @apply btn border-oxblood bg-oxblood text-parchment hover:bg-oxblood-deep;
+  }
+  .btn-green {
+    @apply btn border-awning bg-awning text-parchment hover:bg-awning-deep;
+  }
+  .btn-ghost {
+    @apply btn border-ink/25 bg-parchment/70 text-ink hover:border-ink/60;
+  }
+
+  .field {
+    @apply w-full border border-ink/20 bg-parchment px-2 py-1.5 font-serif text-[15px] outline-none focus:border-oxblood;
+  }
+
+  .ink-add {
+    background: linear-gradient(transparent 55%, #3b4d3b2e 55%);
+  }
+  .ink-del {
+    background: linear-gradient(transparent 55%, #6b24282e 55%);
+    text-decoration: line-through;
+    text-decoration-color: #6b2428aa;
+  }
+}
+
+/* ---------- linens ---------- */
+
+/* linen classes are built at runtime (linen-${name}), so they live outside
+   the tailwind layers where purge would drop them. position comes from the
+   caller (relative/absolute). */
+.linen::after {
+  /* soft cloth folds */
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 60% at 20% 10%, rgba(255, 255, 255, 0.12), transparent 60%),
+    radial-gradient(90% 70% at 85% 90%, rgba(0, 0, 0, 0.1), transparent 60%),
+    linear-gradient(115deg, transparent 40%, rgba(0, 0, 0, 0.05) 48%, transparent 56%);
+}
+
+.linen-oxblood { background: #7a2440; }
+.linen-lavender { background: #cbbccb; }
+.linen-linen { background: #ece4d6; }
+.linen-navy { background: #1f3f78; }
+.linen-terracotta { background: #c98670; }
+.linen-olive { background: #cfc59a; }
+.linen-celadon { background: #a9bfa8; }
+
+.linen-gingham {
+  background-color: #f2ede1;
+  background-image:
+    linear-gradient(90deg, rgba(59, 77, 59, 0.55) 50%, transparent 50%),
+    linear-gradient(rgba(59, 77, 59, 0.55) 50%, transparent 50%);
+  background-size: 22px 22px;
+}
+
+.linen-ticking {
+  background-color: #ece8e0;
+  background-image: repeating-linear-gradient(
+    90deg,
+    #b9bdc4 0 14px,
+    transparent 14px 30px,
+    #b9bdc4 30px 32px,
+    transparent 32px 46px
+  );
+}
+
+.linen-blockprint {
+  background-color: #efe8da;
+  background-image:
+    radial-gradient(circle at 50% 42%, #e2b84b 0 7px, transparent 8px),
+    radial-gradient(ellipse 4px 9px at 50% 62%, #7f9a62 0 100%, transparent 100%),
+    radial-gradient(circle at 50% 42%, #f0d68a 0 12px, transparent 13px);
+  background-size: 64px 64px;
+  background-position: 0 0, 0 0, 0 0;
+}
+
+/* ---------- awning ---------- */
+
+.awning-stripes {
+  background-image: repeating-linear-gradient(90deg, var(--oxblood) 0 28px, #f1e8d6 28px 56px);
+}
+
+.checker {
+  background-color: #f1e8d6;
+  background-image:
+    linear-gradient(45deg, #5a1f24 25%, transparent 25%, transparent 75%, #5a1f24 75%),
+    linear-gradient(45deg, #5a1f24 25%, transparent 25%, transparent 75%, #5a1f24 75%);
+  background-size: 36px 36px;
+  background-position: 0 0, 18px 18px;
+}
+
+.walnut {
+  background-color: #6a442e;
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='300'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.003 0.09' numOctaves='3' seed='4'/><feColorMatrix values='0 0 0 0 .2  0 0 0 0 .1  0 0 0 0 .05  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>"),
+    repeating-linear-gradient(180deg, transparent 0 119px, rgba(30, 15, 5, 0.35) 119px 121px),
+    linear-gradient(180deg, #7a5238, #5c3b27);
+  background-size: 600px 300px, auto, auto;
+}
+
+@media print {
+  body {
+    background: white;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-page {
+    break-after: page;
+    border: none !important;
+    box-shadow: none !important;
+  }
+}
