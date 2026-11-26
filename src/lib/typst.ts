@@ -54,8 +54,8 @@ export function cookbookTypst(repos: Repo[], opts: { title?: string; author?: st
   return `// fiche — cookbook export
 // compile with: typst compile --font-path public/fonts cookbook.typ
 
-#let oxblood = rgb("#6B2428")
-#let awning = rgb("#3B4D3B")
+#let oxblood = rgb("#93302A")
+#let awning = rgb("#2F4A3B")
 #let muted = rgb("#8A7E72")
 #let paper = rgb("#FAF7F2")
 

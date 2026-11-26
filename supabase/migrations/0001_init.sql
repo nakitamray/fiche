@@ -6,12 +6,9 @@ create extension if not exists vector;
 
 create table repositories (
   id          uuid primary key default gen_random_uuid(),
-  owner_id    uuid not null references auth.users (id) on delete cascade,
+  owner_id    uuid not null default auth.uid() references auth.users (id) on delete cascade,
   slug        text not null,
   head        text not null default 'main',
-  linen       text not null default 'linen',
-  plate       text not null default 'plain',
-  pastry      text not null default 'slab',
   stamp       text check (stamp in ('tested', 'house special', 'sold out')),
   draft       jsonb,
   created_at  timestamptz not null default now(),
@@ -27,7 +24,7 @@ create table commits (
   crumb_score   numeric(2, 1) check (crumb_score between 0 and 5),
   tasting_notes text,
   baked_on      date,
-  created_at    timestamptz not null default now(),
+  committed_at  timestamptz not null default now(),
   -- 8 flavor axes + 4 structural ratios, see src/lib/flavor.ts
   flavor        vector(12),
   primary key (repository_id, hash)
@@ -49,21 +46,24 @@ create table branches (
   name          text not null,
   tip_hash      text not null,
   primary key (repository_id, name),
-  foreign key (repository_id, tip_hash) references commits (repository_id, hash)
+  foreign key (repository_id, tip_hash) references commits (repository_id, hash) on delete cascade
 );
 
 create index commits_flavor_idx on commits using hnsw (flavor vector_cosine_ops);
-create index commits_repo_created_idx on commits (repository_id, created_at desc);
+create index commits_repo_committed_idx on commits (repository_id, committed_at desc);
+create index commit_parents_parent_idx on commit_parents (repository_id, parent_hash);
+create index branches_tip_idx on branches (repository_id, tip_hash);
 
 -- nearest bakes by flavor, across everything the user owns
 create or replace function similar_bakes(target vector(12), max_results int default 6)
 returns table (repository_id uuid, hash text, similarity float)
 language sql stable
+set search_path = public
 as $$
   select c.repository_id, c.hash, 1 - (c.flavor <=> target) as similarity
   from commits c
   join repositories r on r.id = c.repository_id
-  where r.owner_id = auth.uid() and c.flavor is not null
+  where r.owner_id = (select auth.uid()) and c.flavor is not null
   order by c.flavor <=> target
   limit max_results;
 $$;
@@ -75,16 +75,16 @@ alter table commit_parents enable row level security;
 alter table branches enable row level security;
 
 create policy "own repositories" on repositories
-  for all using (owner_id = auth.uid()) with check (owner_id = auth.uid());
+  for all using (owner_id = (select auth.uid())) with check (owner_id = (select auth.uid()));
 
 create policy "own commits" on commits
-  for all using (exists (select 1 from repositories r where r.id = repository_id and r.owner_id = auth.uid()))
-  with check (exists (select 1 from repositories r where r.id = repository_id and r.owner_id = auth.uid()));
+  for all using (exists (select 1 from repositories r where r.id = repository_id and r.owner_id = (select auth.uid())))
+  with check (exists (select 1 from repositories r where r.id = repository_id and r.owner_id = (select auth.uid())));
 
 create policy "own parents" on commit_parents
-  for all using (exists (select 1 from repositories r where r.id = repository_id and r.owner_id = auth.uid()))
-  with check (exists (select 1 from repositories r where r.id = repository_id and r.owner_id = auth.uid()));
+  for all using (exists (select 1 from repositories r where r.id = repository_id and r.owner_id = (select auth.uid())))
+  with check (exists (select 1 from repositories r where r.id = repository_id and r.owner_id = (select auth.uid())));
 
 create policy "own branches" on branches
-  for all using (exists (select 1 from repositories r where r.id = repository_id and r.owner_id = auth.uid()))
-  with check (exists (select 1 from repositories r where r.id = repository_id and r.owner_id = auth.uid()));
+  for all using (exists (select 1 from repositories r where r.id = repository_id and r.owner_id = (select auth.uid())))
+  with check (exists (select 1 from repositories r where r.id = repository_id and r.owner_id = (select auth.uid())));

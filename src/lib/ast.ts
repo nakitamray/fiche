@@ -84,51 +84,8 @@ export const Commit = z.object({
 });
 export type Commit = z.infer<typeof Commit>;
 
-export const Linen = z.enum([
-  "oxblood",
-  "gingham",
-  "lavender",
-  "linen",
-  "navy",
-  "blockprint",
-  "terracotta",
-  "ticking",
-  "olive",
-  "celadon",
-]);
-export type Linen = z.infer<typeof Linen>;
-
-export const PlateStyle = z.enum([
-  "plain",
-  "green",
-  "sprig",
-  "rimmed",
-  "willow",
-  "butter",
-  "fluted",
-  "banded",
-  "sky",
-]);
-export type PlateStyle = z.infer<typeof PlateStyle>;
-
-export const PastryShape = z.enum([
-  "knot",
-  "croissant",
-  "danish",
-  "bomboloni",
-  "swirl",
-  "heart",
-  "pain",
-  "tart",
-  "slab",
-]);
-export type PastryShape = z.infer<typeof PastryShape>;
-
 export const Repo = z.object({
   slug: z.string(),
-  linen: Linen,
-  plate: PlateStyle,
-  pastry: PastryShape,
   head: z.string(),
   branches: z.record(z.string(), z.string()),
   commits: z.record(z.string(), Commit),

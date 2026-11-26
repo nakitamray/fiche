@@ -99,7 +99,7 @@ function cardamomKnots(): Repo {
     "12 knots",
   );
 
-  let repo = initRepo("cardamom-knots", v1, { linen: "oxblood", plate: "plain", pastry: "knot" }, {
+  let repo = initRepo("cardamom-knots", v1, {
     date: day("2026-08-02"),
     message: "first write-up, from the notebook",
     tasting: taste(3.5, "good flavor, a bit bready. centre slightly dense.", "2026-08-02"),
@@ -204,7 +204,7 @@ function pistachioCroissant(): Repo {
     ],
     "12 croissants",
   );
-  return initRepo("pistachio-croissant", r, { linen: "gingham", plate: "green", pastry: "croissant" }, {
+  return initRepo("pistachio-croissant", r, {
     date: day("2026-07-12"),
     tasting: taste(4.5, "half sugar-dusted, half pistachio. the green plate was a good call.", "2026-07-12"),
   });
@@ -254,7 +254,7 @@ function blueberryDanish(): Repo {
     ],
     "14 danishes",
   );
-  return initRepo("blueberry-danish", r, { linen: "lavender", plate: "sprig", pastry: "danish" }, {
+  return initRepo("blueberry-danish", r, {
     date: day("2026-06-21"),
     tasting: taste(4, "bright, tangy cheese. berries burst a little too much — toss in more starch.", "2026-06-21"),
   });
@@ -295,7 +295,7 @@ function bomboloni(): Repo {
     ],
     "16 bomboloni",
   );
-  return initRepo("bomboloni", r, { linen: "linen", plate: "rimmed", pastry: "bomboloni" }, {
+  return initRepo("bomboloni", r, {
     date: day("2026-05-30"),
     tasting: taste(4, "glossy, rich. fry temp matters — 175 is right.", "2026-05-30"),
   });
@@ -339,7 +339,7 @@ function morningBun(): Repo {
     ],
     "12 buns",
   );
-  return initRepo("morning-bun", r, { linen: "navy", plate: "willow", pastry: "swirl" }, {
+  return initRepo("morning-bun", r, {
     date: day("2026-04-18"),
     tasting: taste(4.5, "caramelised edges, orange comes through. best warm.", "2026-04-18"),
   });
@@ -378,7 +378,7 @@ function roseHeart(): Repo {
     ],
     "20 hearts",
   );
-  return initRepo("rose-heart", r, { linen: "blockprint", plate: "butter", pastry: "heart" }, {
+  return initRepo("rose-heart", r, {
     date: day("2026-02-14"),
     tasting: taste(4, "floral without being soapy. raspberry makes the pink.", "2026-02-14"),
   });
@@ -412,7 +412,7 @@ function painAuChocolat(): Repo {
     ],
     "14 pains",
   );
-  return initRepo("pain-au-chocolat", r, { linen: "terracotta", plate: "fluted", pastry: "pain" }, {
+  return initRepo("pain-au-chocolat", r, {
     date: day("2026-03-07"),
     tasting: taste(4, "shattering top, honeycomb crumb.", "2026-03-07"),
   });
@@ -455,7 +455,7 @@ function almondCroissant(): Repo {
     ],
     "8 croissants",
   );
-  return initRepo("almond-croissant", r, { linen: "ticking", plate: "banded", pastry: "croissant" }, {
+  return initRepo("almond-croissant", r, {
     date: day("2026-03-21"),
     tasting: taste(5, "toasted almond, orange blossom in the syrup. the reason for day-old croissants.", "2026-03-21"),
   });
@@ -490,7 +490,7 @@ function butterCroissant(): Repo {
     ],
     "12 croissants",
   );
-  let repo = initRepo("butter-croissant", r, { linen: "olive", plate: "sky", pastry: "croissant" }, {
+  let repo = initRepo("butter-croissant", r, {
     date: day("2026-01-10"),
     tasting: taste(3.5, "butter broke through on the last fold. dough was too warm.", "2026-01-10"),
   });

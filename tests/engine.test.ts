@@ -39,7 +39,6 @@ const lean: Recipe = {
   ],
 };
 
-const look = { linen: "linen", plate: "plain", pastry: "slab" } as const;
 
 describe("units", () => {
   it("parses fractions, unicode and ranges", () => {
@@ -93,7 +92,7 @@ describe("baker's math", () => {
 
 describe("repo", () => {
   it("commits, branches, and keeps a DAG", () => {
-    let repo = initRepo("loaf", lean, look, { date: "2026-01-01T00:00:00.000Z" });
+    let repo = initRepo("loaf", lean, { date: "2026-01-01T00:00:00.000Z" });
     const root = headCommit(repo).hash;
     repo = createBranch(repo, "Wetter Test!");
     expect(repo.head).toBe("wetter-test");
@@ -111,14 +110,14 @@ describe("repo", () => {
   });
 
   it("hashes are content-addressed", () => {
-    const a = initRepo("a", lean, look, { date: "2026-01-01T00:00:00.000Z" });
-    const b = initRepo("b", lean, look, { date: "2026-01-01T00:00:00.000Z" });
+    const a = initRepo("a", lean, { date: "2026-01-01T00:00:00.000Z" });
+    const b = initRepo("b", lean, { date: "2026-01-01T00:00:00.000Z" });
     expect(a.branches.main).toBe(b.branches.main);
   });
 
   it("cherry-picks a component with fresh ids and provenance", () => {
     const lib = seedLibrary();
-    const target = initRepo("loaf", lean, look);
+    const target = initRepo("loaf", lean);
     const source = lib.repos.find((r) => r.slug === "pistachio-croissant")!;
     const comp = headCommit(source).recipe.components[1];
     const out = cherryPickComponent(target, source, source.branches.main, comp.id);

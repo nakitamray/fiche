@@ -36,7 +36,6 @@ export function makeCommit(input: Omit<Commit, "hash">): Commit {
 export function initRepo(
   slug: string,
   recipe: Recipe,
-  look: Pick<Repo, "linen" | "plate" | "pastry">,
   opts: { date?: string; message?: string; tasting?: TastingLog } = {},
 ): Repo {
   const date = opts.date ?? new Date().toISOString();
@@ -50,7 +49,6 @@ export function initRepo(
   });
   return {
     slug,
-    ...look,
     head: DEFAULT_BRANCH,
     branches: { [DEFAULT_BRANCH]: root.hash },
     commits: { [root.hash]: root },
