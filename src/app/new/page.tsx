@@ -78,11 +78,11 @@ export default function NewRecipe() {
   return (
     <div>
       <section className="mb-6">
-        <p className="font-script text-3xl leading-none text-glaze">from the notebook</p>
-        <h1 className="font-display text-5xl leading-[0.95] sm:text-6xl">new recipe</h1>
+        <p className="label text-oxblood">from the notebook</p>
+        <h1 className="mt-2 font-serif text-[64px] leading-[0.9] sm:text-[84px]">new recipe</h1>
         <p className="mt-2 max-w-xl text-ink/70">
           paste a recipe or a link. cups and spoons become grams, everything gets a baker&apos;s percentage, and it lands as the
-          first commit on <span className="font-mono text-[13px]">main</span>.
+          first commit on <span className="font-cond text-[13px]">main</span>.
         </p>
       </section>
 
@@ -91,14 +91,14 @@ export default function NewRecipe() {
           <button
             key={m}
             onClick={() => setMode(m)}
-            className={`label -mb-px border-b-2 px-3 py-2 ${mode === m ? "border-glaze text-glaze" : "border-transparent text-ink/50 hover:text-ink"}`}
+            className={`label -mb-px border-b-2 px-3 py-2 ${mode === m ? "border-oxblood text-oxblood" : "border-transparent text-ink/50 hover:text-ink"}`}
           >
             {m === "paste" ? "paste text" : m === "link" ? "from a link" : "start blank"}
           </button>
         ))}
       </div>
 
-      <div className="card mb-8 p-4 sm:p-5">
+      <div className="slip mb-8 p-4 sm:p-5">
         {mode === "paste" && (
           <>
             <textarea
@@ -106,14 +106,14 @@ export default function NewRecipe() {
               onChange={(e) => setText(e.target.value)}
               rows={12}
               placeholder={EXAMPLE}
-              className="field font-mono text-[13px] leading-relaxed"
+              className="field font-cond text-[13px] leading-relaxed"
             />
             <div className="mt-3 flex flex-wrap gap-2">
-              <button className="btn-glaze" disabled={!text.trim()} onClick={() => parse(text)}>
+              <button className="btn-ox" disabled={!text.trim()} onClick={() => parse(text)}>
                 read it
               </button>
               <button
-                className="btn-ghost"
+                className="btn-line"
                 onClick={() => {
                   setText(EXAMPLE);
                   parse(EXAMPLE);
@@ -132,15 +132,15 @@ export default function NewRecipe() {
             }}
             className="flex flex-col gap-2 sm:flex-row"
           >
-            <input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://…" className="field font-mono text-[13px]" />
-            <button className="btn-glaze shrink-0" disabled={!url.trim() || busy}>
+            <input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://…" className="field font-cond text-[13px]" />
+            <button className="btn-ox shrink-0" disabled={!url.trim() || busy}>
               {busy ? "reading…" : "fetch"}
             </button>
           </form>
         )}
         {mode === "blank" && (
           <button
-            className="btn-glaze"
+            className="btn-ox"
             onClick={() => {
               setRecipe({
                 title: "untitled",
@@ -152,7 +152,7 @@ export default function NewRecipe() {
             open a blank sheet
           </button>
         )}
-        {error && <p className="mt-3 text-glaze">{error}</p>}
+        {error && <p className="mt-3 text-oxblood">{error}</p>}
       </div>
 
       {recipe && (
@@ -161,12 +161,12 @@ export default function NewRecipe() {
             <input
               value={recipe.title}
               onChange={(e) => setRecipe({ ...recipe, title: e.target.value })}
-              className="mb-4 block w-full bg-transparent font-display text-4xl outline-none focus:bg-card/60"
+              className="mb-4 block w-full bg-transparent font-serif text-4xl outline-none focus:bg-card/60"
               aria-label="title"
             />
             {unconverted.length > 0 && (
-              <div className="mb-4 border-l-2 border-honey bg-honey/20 px-3 py-2 text-[14px]">
-                <p className="label mb-1 text-honey">needs a weight</p>
+              <div className="slip mb-4 border-l-4 border-l-oxblood px-4 py-3 text-[15px]">
+                <p className="label mb-1 text-oxblood">needs a weight</p>
                 {unconverted.map((u, i) => (
                   <p key={i}>{u}</p>
                 ))}
@@ -176,12 +176,12 @@ export default function NewRecipe() {
           </div>
           <aside className="space-y-4">
             <ScaleBox recipe={recipe} edit={(fn) => setRecipe((r) => (r ? fn(r) : r))} readOnly={false} />
-            <section className="card p-4">
-              <p className="font-script text-2xl leading-none text-brass-deep">looks right?</p>
+            <section className="slip p-4">
+              <p className="font-serif italic text-2xl leading-none text-muted">looks right?</p>
               <p className="mt-1 text-[14px] text-ink/65">
-                fix anything flagged, then save it. it lands as the first commit on <span className="font-mono text-[12px]">main</span>.
+                fix anything flagged, then save it. it lands as the first commit on <span className="font-cond text-[12px]">main</span>.
               </p>
-              <button className="btn-glaze mt-3 w-full justify-center" onClick={save}>
+              <button className="btn-ox mt-3 w-full justify-center" onClick={save}>
                 commit to main
               </button>
             </section>

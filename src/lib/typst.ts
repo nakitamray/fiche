@@ -54,37 +54,37 @@ export function cookbookTypst(repos: Repo[], opts: { title?: string; author?: st
   return `// fiche — cookbook export
 // compile with: typst compile --font-path public/fonts cookbook.typ
 
-#let oxblood = rgb("#93302A")
-#let awning = rgb("#2F4A3B")
+#let oxblood = rgb("#6E2226")
+#let awning = rgb("#364935")
 #let muted = rgb("#8A7E72")
-#let paper = rgb("#FAF7F2")
+#let paper = rgb("#FFFDF8")
 
 #set page(paper: "a5", fill: paper, margin: (x: 18mm, y: 20mm),
-  footer: context [#set text(font: "Markl Mono", size: 7pt, fill: muted); #h(1fr) #counter(page).display() #h(1fr)])
-#set text(font: ("Newsreader", "Georgia"), size: 9.5pt, fill: rgb("#2A211C"))
+  footer: context [#set text(font: "Archivo Narrow", size: 7pt, fill: muted); #h(1fr) #counter(page).display() #h(1fr)])
+#set text(font: ("Instrument Serif", "Georgia"), size: 9.5pt, fill: rgb("#2A211C"))
 #set par(leading: 0.62em)
 
 #let component(name) = {
   v(10pt)
-  text(font: "Markl Mono", size: 7.5pt, tracking: 1.2pt, fill: oxblood, upper(name))
+  text(font: "Archivo Narrow", size: 7.5pt, tracking: 1.2pt, fill: oxblood, upper(name))
   v(-4pt)
   line(length: 100%, stroke: 0.4pt + oxblood)
 }
 
 #let recipe(title: "", hash: "", ratios: (), notes: none, score: none, body) = {
   pagebreak(weak: true)
-  text(font: "Black Goose", size: 30pt, fill: oxblood, lower(title))
+  text(font: "Instrument Serif", size: 30pt, fill: oxblood, lower(title))
   v(-6pt)
-  text(font: "Markl Mono", size: 7pt, fill: muted, tracking: 1pt)[#upper("main") · #hash]
+  text(font: "Archivo Narrow", size: 7pt, fill: muted, tracking: 1pt)[#upper("main") · #hash]
   v(6pt)
   grid(columns: ratios.len(), column-gutter: 6pt,
     ..ratios.map(((k, v)) => box(stroke: 0.5pt + awning, inset: 5pt, radius: 1pt,
-      text(font: "Markl Mono", size: 7pt, fill: awning)[#upper(k) #v])))
+      text(font: "Archivo Narrow", size: 7pt, fill: awning)[#upper(k) #v])))
   body
   if notes != none {
     v(12pt)
     block(inset: (left: 8pt), stroke: (left: 1pt + oxblood))[
-      #text(font: "Perfecto Calligraphy - Personal use", size: 16pt, fill: oxblood)[tasting notes]
+      #text(font: "Instrument Serif", style: "italic", size: 14pt, fill: oxblood)[tasting notes]
       #linebreak()
       #emph(notes)
       #if score != none [ — #score / 5]
@@ -93,11 +93,11 @@ export function cookbookTypst(repos: Repo[], opts: { title?: string; author?: st
 }
 
 #align(center + horizon)[
-  #text(font: "Perfecto Calligraphy - Personal use", size: 22pt, fill: oxblood)[the house book]
+  #text(font: "Instrument Serif", style: "italic", size: 18pt, fill: oxblood)[the house book]
   #v(-10pt)
-  #text(font: "Black Goose", size: 64pt, fill: awning)[${esc(opts.title ?? "fiche")}]
+  #text(font: "Instrument Serif", size: 64pt, fill: awning)[${esc(opts.title ?? "fiche")}]
   #v(4pt)
-  #text(font: "Markl Mono", size: 8pt, tracking: 2pt, fill: muted)[${esc((opts.author ?? "").toUpperCase())}]
+  #text(font: "Archivo Narrow", size: 8pt, tracking: 2pt, fill: muted)[${esc((opts.author ?? "").toUpperCase())}]
 ]
 
 ${pages.join("\n\n")}

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AXIS_NAMES, flavorMap } from "@/lib/flavor";
 import { useLibrary } from "@/lib/store";
+import { WireClip } from "@/components/Tag";
 
 const CARD_W = 168;
 const CARD_H = 96;
@@ -84,49 +85,43 @@ export default function FlavorGraph() {
     <div>
       <section className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="font-script text-3xl leading-none text-glaze">what tastes like what</p>
-          <h1 className="font-display text-5xl leading-[0.95] sm:text-6xl">flavor map</h1>
-          <p className="mt-2 max-w-xl text-ink/70">
+          <p className="label text-oxblood">what tastes like what</p>
+          <h1 className="mt-2 font-serif text-[64px] leading-[0.9] sm:text-[84px]">
+            the flavor <span className="italic text-oxblood">map</span>
+          </h1>
+          <p className="mt-3 max-w-xl font-serif text-[19px] leading-snug text-ink/80">
             every recipe&apos;s main line, placed by what&apos;s in it and what the tasting notes say. close cards taste alike; the
-            brass trails link each bake to its nearest neighbours. drag them around.
+            lines link each bake to its nearest neighbours. drag them around.
           </p>
         </div>
-        <button onClick={() => setPos({})} className="btn-ghost">
+        <button onClick={() => setPos({})} className="btn-line">
           reset layout
         </button>
       </section>
 
       <div
         ref={board}
-        className="marble relative h-[640px] touch-none select-none overflow-hidden rounded-[6px] shadow-lift ring-1 ring-brass/50"
+        className="slip relative h-[640px] touch-none select-none overflow-hidden"
+        style={{ backgroundImage: "linear-gradient(#E7E0D4 1px, transparent 1px), linear-gradient(90deg, #E7E0D4 1px, transparent 1px)", backgroundSize: "18px 18px" }}
         onPointerMove={onMove}
         onPointerUp={() => (drag.current = null)}
         onPointerLeave={() => (drag.current = null)}
       >
-        <div className="wall-sun pointer-events-none absolute inset-0" />
         <svg className="pointer-events-none absolute inset-0 h-full w-full">
-          <defs>
-            <filter id="dust">
-              <feTurbulence type="fractalNoise" baseFrequency="1.2" numOctaves="2" result="n" />
-              <feDisplacementMap in="SourceGraphic" in2="n" scale="5" />
-              <feGaussianBlur stdDeviation="0.6" />
-            </filter>
-          </defs>
           {edges.map(([a, b, s]) => {
             const pa = at(points[a].slug, a);
             const pb = at(points[b].slug, b);
             const lit = hover === points[a].slug || hover === points[b].slug;
             return (
-              <g key={`${a}-${b}`} filter="url(#dust)" opacity={lit ? 1 : Math.round((0.45 + (s - 0.55) * 1.2) * 100) / 100}>
+              <g key={`${a}-${b}`} opacity={lit ? 1 : Math.round((0.35 + (s - 0.55) * 1.4) * 100) / 100}>
                 <line
                   x1={pa.x + CARD_W / 2}
                   y1={pa.y + CARD_H / 2}
                   x2={pb.x + CARD_W / 2}
                   y2={pb.y + CARD_H / 2}
-                  stroke="#9c7637"
-                  strokeWidth={lit ? 3.5 : 2.5}
-                  strokeDasharray="0.5 5"
-                  strokeLinecap="round"
+                  stroke={lit ? "#6E2226" : "#1E1A17"}
+                  strokeWidth={lit ? 2 : 1}
+                  strokeDasharray={lit ? undefined : "4 4"}
                 />
               </g>
             );
@@ -148,12 +143,13 @@ export default function FlavorGraph() {
               onPointerEnter={() => setHover(p.slug)}
               onPointerLeave={() => setHover(undefined)}
             >
-              <div className="card flex h-full gap-2 p-2.5 shadow-tag">
-                <span className="mt-1 h-2.5 w-2.5 shrink-0 rounded-full shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.3)]" style={{ background: AXIS_INK[p.dominant] }} />
+              <WireClip className="absolute left-1/2 top-[-12px] h-[18px] w-[11px] -translate-x-1/2" />
+              <div className="slip flex h-full gap-2 p-2.5">
+                <span className="mt-1 h-2.5 w-2.5 shrink-0" style={{ background: AXIS_INK[p.dominant] }} />
                 <div className="flex min-w-0 flex-1 flex-col">
                   <Link
                     href={`/r/${p.slug}`}
-                    className="font-display text-[17px] leading-[1.05] text-ink hover:text-glaze"
+                    className="font-cond text-[15px] font-bold uppercase leading-[1.05] tracking-[0.02em] text-ink hover:text-oxblood"
                     onPointerDown={(e) => e.stopPropagation()}
                     draggable={false}
                   >

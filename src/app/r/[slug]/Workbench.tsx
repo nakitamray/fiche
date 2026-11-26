@@ -19,7 +19,7 @@ import {
   workingTree,
 } from "@/lib/repo";
 import { useLibrary } from "@/lib/store";
-import { Stamp, Tag } from "@/components/Tag";
+import { Flag, Stamp } from "@/components/Tag";
 import { DiffView, type Ref } from "@/components/workbench/DiffView";
 import { LineageRail } from "@/components/workbench/LineageRail";
 import { RatioSheet } from "@/components/workbench/RatioSheet";
@@ -40,10 +40,10 @@ export function Workbench({ slug }: { slug: string }) {
 
   if (!repo) {
     return (
-      <div className="card mx-auto max-w-md p-10 text-center">
-        <p className="font-display text-3xl">{ready ? "not in the case" : "…"}</p>
+      <div className="slip mx-auto max-w-md p-10 text-center">
+        <p className="font-serif text-3xl">{ready ? "not in the case" : "…"}</p>
         {ready && (
-          <Link href="/" className="label mt-3 inline-block text-glaze underline">
+          <Link href="/" className="label mt-3 inline-block text-oxblood underline">
             back to the vitrine
           </Link>
         )}
@@ -80,24 +80,24 @@ export function Workbench({ slug }: { slug: string }) {
       {/* header */}
       <section className="mb-6 flex flex-wrap items-end gap-5">
         <div className="min-w-0 flex-1">
-          <Link href="/" className="label text-ink/45 hover:text-glaze">
-            ← the counter
+          <Link href="/" className="label text-ink/45 hover:text-oxblood">
+            ← la vitrine
           </Link>
           {readOnly ? (
-            <h1 className="font-display text-5xl leading-[0.95] sm:text-6xl">{recipe.title}</h1>
+            <h1 className="font-serif text-[56px] leading-[0.9] sm:text-[76px]">{recipe.title}</h1>
           ) : (
             <input
               value={recipe.title}
               onChange={(e) => edit((r) => ({ ...r, title: e.target.value }))}
-              className="block w-full bg-transparent font-display text-5xl leading-[0.95] outline-none focus:bg-card/60 sm:text-6xl"
+              className="block w-full bg-transparent font-serif text-[56px] leading-[0.95] outline-none focus:bg-card sm:text-[76px]"
               aria-label="title"
             />
           )}
           <div className="mt-2 flex flex-wrap items-center gap-2">
-            <Tag tone="glaze">{repo.head}</Tag>
-            <Tag>{short(head.hash)}</Tag>
-            {recipe.yield && <Tag>{recipe.yield}</Tag>}
-            {dirty && <Tag tone="bottle">uncommitted</Tag>}
+            <Flag tone="ox" tilt={-1.5}>{repo.head}</Flag>
+            <Flag tilt={1}>{short(head.hash)}</Flag>
+            {recipe.yield && <Flag tilt={-0.8}>{recipe.yield}</Flag>}
+            {dirty && <Flag tone="forest" tilt={1.4}>uncommitted</Flag>}
             <span className="label text-ink/45">
               {recipe.components.length} components · {minutes(recipe.components.flatMap((c) => c.steps).reduce((n, s) => n + (s.duration_min ?? 0), 0))} start to finish
             </span>
@@ -107,12 +107,12 @@ export function Workbench({ slug }: { slug: string }) {
       </section>
 
       {viewed && (
-        <div className="mb-5 flex flex-wrap items-center gap-3 border border-glaze/30 bg-glaze/5 px-4 py-2.5">
-          <span className="label text-glaze">viewing {short(viewed.hash)}</span>
+        <div className="mb-5 flex flex-wrap items-center gap-3 border border-oxblood/30 bg-oxblood/5 px-4 py-2.5">
+          <span className="label text-oxblood">viewing {short(viewed.hash)}</span>
           <span className="text-[15px] italic">“{viewed.message}” — {longDate(viewed.date)}</span>
           {viewed.tasting && (
             <span className="text-[14px] text-ink/70">
-              <span className="font-script text-lg text-glaze">notes</span> {viewed.tasting.notes} ({viewed.tasting.crumb_score}/5)
+              <span className="font-serif italic text-lg text-oxblood">notes</span> {viewed.tasting.notes} ({viewed.tasting.crumb_score}/5)
             </span>
           )}
           <span className="ml-auto flex gap-2">
@@ -123,7 +123,7 @@ export function Workbench({ slug }: { slug: string }) {
                 setTab("diff");
                 setViewing(undefined);
               }}
-              className="btn-ghost"
+              className="btn-line"
             >
               diff vs working
             </button>
@@ -135,11 +135,11 @@ export function Workbench({ slug }: { slug: string }) {
                   setViewing(undefined);
                 }
               }}
-              className="btn-ghost"
+              className="btn-line"
             >
               fork here
             </button>
-            <button onClick={() => setViewing(undefined)} className="btn-glaze">
+            <button onClick={() => setViewing(undefined)} className="btn-ox">
               back to {repo.head}
             </button>
           </span>
@@ -162,7 +162,7 @@ export function Workbench({ slug }: { slug: string }) {
               <button
                 key={t}
                 onClick={() => setTab(t)}
-                className={`label -mb-px border-b-2 px-3 py-2 ${tab === t ? "border-glaze text-glaze" : "border-transparent text-ink/50 hover:text-ink"}`}
+                className={`label -mb-px border-b-2 px-3 py-2 ${tab === t ? "border-oxblood text-oxblood" : "border-transparent text-ink/50 hover:text-ink"}`}
               >
                 {t === "sheet" ? "recipe" : "diff"}
               </button>
@@ -231,9 +231,9 @@ export function Workbench({ slug }: { slug: string }) {
         <AnimatePresence>
           {toast && (
             <motion.div initial={{ y: 40, opacity: 0, rotate: -2 }} animate={{ y: 0, opacity: 1, rotate: -1 }} exit={{ y: 40, opacity: 0 }}>
-              <Tag tone="glaze" className="px-4 py-2 text-[12px]">
+              <Flag tone="ox">
                 {toast}
-              </Tag>
+              </Flag>
             </motion.div>
           )}
         </AnimatePresence>

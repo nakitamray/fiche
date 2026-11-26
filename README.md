@@ -6,7 +6,7 @@ every recipe in fiche is a tree, not a page of text: components (dough, filling,
 
 it started because my notebook had four versions of the same cardamom bun and i couldn't remember which one had the longer proof.
 
-![the counter](docs/counter.jpg)
+![la vitrine](docs/vitrine.jpg)
 
 ## what it does
 
@@ -19,7 +19,7 @@ it started because my notebook had four versions of the same cardamom bun and i 
 - **flavor map.** each recipe's main line becomes a small vector: eight flavor axes (nutty, caramel, bright, berry, spice, floral, cocoa, custard) scored from ingredients and tasting notes, plus structural ratios. it's projected to 2D with pca and laid out on a butcher block. drag things around.
 - **cookbook.** takes the tip of `main` from every recipe and sets it as an a5 book. you can print it straight from the browser or export typst source, and the worker compiles that into a real pdf.
 
-![the menu boards](docs/menu-boards.jpg)
+![the case](docs/counter.jpg)
 
 ![workbench, diff view](docs/workbench.jpg)
 
@@ -96,14 +96,16 @@ supabase/      schema
 next.js (app router) · react · typescript · tailwind · framer motion · zod · supabase · vitest
 python worker: fastapi · pint · typst
 
+## look
+
+a corner bakery in paris, flattened: cream ceramic tile with 1px grout behind everything, a scalloped green-and-cream awning under the sign, recipes as hand-lettered price cards on wire clips standing on a ledge above an oxblood subway-tile counter. no gradients, no shadows, no rounded corners. the baker's math is set in white on its own block of oxblood tile.
+
 ## fonts
 
-- **black goose** (display): 1001fonts free-for-personal-use license
-- **markl mono** (labels and tags): jolicia type
-- **perfecto calligraphy** (the handwriting): letterara studio, personal use
-- **newsreader** (body): google fonts, ofl
+- **instrument serif** for display and body
+- **archivo narrow** for labels, flags and numbers
 
-the licenses are in `public/fonts/licenses`. black goose and perfecto are personal-use only, so swap them out before using this for anything commercial.
+both are ofl. the files and licenses are in `public/fonts`, and the typst export uses the same two.
 
 ## next up
 

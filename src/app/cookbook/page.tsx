@@ -32,17 +32,17 @@ export default function Cookbook() {
   return (
     <div>
       <section className="no-print mb-6">
-        <p className="font-script text-3xl leading-none text-glaze">the house book</p>
-        <h1 className="font-display text-5xl leading-[0.95] sm:text-6xl">cookbook</h1>
+        <p className="label text-oxblood">the house book</p>
+        <h1 className="mt-2 font-serif text-[64px] leading-[0.9] sm:text-[84px]">cookbook</h1>
         <p className="mt-2 max-w-xl text-ink/70">
-          takes the tip of <span className="font-mono text-[13px]">main</span> from every recipe you tick and sets it as a little
+          takes the tip of <span className="font-cond text-[13px]">main</span> from every recipe you tick and sets it as a little
           a5 book. print it straight from here, or download the typst source for a proper pdf.
         </p>
       </section>
 
       <div className="no-print mb-8 grid gap-4 lg:grid-cols-[1fr_320px]">
-        <div className="card p-4">
-          <p className="label mb-2 text-glaze">in the book</p>
+        <div className="slip p-4">
+          <p className="label mb-2 text-oxblood">in the book</p>
           <div className="grid gap-x-4 gap-y-1 sm:grid-cols-2">
             {library.repos.map((r) => {
               const tip = tipOf(r, DEFAULT_BRANCH);
@@ -50,7 +50,7 @@ export default function Cookbook() {
                 <label key={r.slug} className="flex items-center gap-2 text-[15px]">
                   <input
                     type="checkbox"
-                    className="accent-glaze"
+                    className="accent-oxblood"
                     checked={!skip.has(r.slug)}
                     onChange={() =>
                       setSkip((s) => {
@@ -68,15 +68,15 @@ export default function Cookbook() {
             })}
           </div>
         </div>
-        <div className="card space-y-2 p-4">
+        <div className="slip space-y-2 p-4">
           <input value={title} onChange={(e) => setTitle(e.target.value)} className="field" placeholder="book title" />
           <input value={author} onChange={(e) => setAuthor(e.target.value)} className="field" placeholder="your name (for the cover)" />
           <div className="flex flex-wrap gap-2 pt-1">
-            <button className="btn-glaze" onClick={() => window.print()} disabled={!chosen.length}>
+            <button className="btn-ox" onClick={() => window.print()} disabled={!chosen.length}>
               print / pdf
             </button>
             <button
-              className="btn-bottle"
+              className="btn-forest"
               disabled={!chosen.length || compiling}
               onClick={async () => {
                 setCompiling(true);
@@ -104,23 +104,23 @@ export default function Cookbook() {
               {compiling ? "setting type…" : "typeset pdf"}
             </button>
             <button
-              className="btn-ghost"
+              className="btn-line"
               disabled={!chosen.length}
               onClick={() => download("cookbook.typ", cookbookTypst(chosen, { title, author }), "text/plain")}
             >
               .typ
             </button>
           </div>
-          {msg && <p className="text-[14px] text-glaze">{msg}</p>}
+          {msg && <p className="text-[14px] text-oxblood">{msg}</p>}
           <div className="flex flex-wrap gap-x-3 gap-y-1 border-t border-ink/10 pt-2">
-            <button className="label text-ink/55 hover:text-glaze" onClick={() => download("fiche-library.json", JSON.stringify(library, null, 2), "application/json")}>
+            <button className="label text-ink/55 hover:text-oxblood" onClick={() => download("fiche-library.json", JSON.stringify(library, null, 2), "application/json")}>
               export library
             </button>
-            <button className="label text-ink/55 hover:text-glaze" onClick={() => file.current?.click()}>
+            <button className="label text-ink/55 hover:text-oxblood" onClick={() => file.current?.click()}>
               import library
             </button>
             <button
-              className="label text-ink/35 hover:text-glaze"
+              className="label text-ink/35 hover:text-oxblood"
               onClick={() => window.confirm("replace everything with the starter recipes?") && reset()}
             >
               reset to starters
@@ -145,19 +145,19 @@ export default function Cookbook() {
 
       {/* the book */}
       <div className="flex flex-col items-center gap-8">
-        <article className="print-page card flex aspect-[148/210] w-full max-w-[560px] flex-col items-center justify-center p-10 text-center">
-          <p className="font-script text-4xl text-glaze">the house book</p>
-          <h2 className="font-display text-8xl leading-none text-glaze">{title}</h2>
-          <div className="my-8 h-px w-24 bg-gradient-to-r from-transparent via-brass to-transparent" />
+        <article className="print-page slip flex aspect-[148/210] w-full max-w-[560px] flex-col items-center justify-center p-10 text-center">
+          <p className="font-serif italic text-4xl text-oxblood">the house book</p>
+          <h2 className="font-serif text-8xl leading-none text-oxblood">{title}</h2>
+          <div className="my-8 h-px w-24" />
           <ol className="space-y-1">
             {chosen.map((r, i) => (
-              <li key={r.slug} className="flex items-baseline gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-ink/60">
-                <span className="text-brass-deep">{String(i + 1).padStart(2, "0")}</span>
+              <li key={r.slug} className="flex items-baseline gap-2 font-cond text-[11px] uppercase tracking-[0.12em] text-ink/60">
+                <span className="text-muted">{String(i + 1).padStart(2, "0")}</span>
                 {tipOf(r, DEFAULT_BRANCH)?.recipe.title}
               </li>
             ))}
           </ol>
-          <div className="my-8 h-px w-24 bg-gradient-to-r from-transparent via-brass to-transparent" />
+          <div className="my-8 h-px w-24" />
           {author && <p className="label tracking-[0.3em] text-ink/60">{author}</p>}
         </article>
 
@@ -168,9 +168,9 @@ export default function Cookbook() {
           const rt = ratios(r);
           const t = lastTasting(repo, DEFAULT_BRANCH);
           return (
-            <article key={repo.slug} className="print-page card w-full max-w-[560px] p-8 sm:p-10">
+            <article key={repo.slug} className="print-page slip w-full max-w-[560px] p-8 sm:p-10">
               <span className="label absolute right-6 top-6 text-ink/35">{String(n + 1).padStart(2, "0")}</span>
-              <h2 className="font-display text-5xl leading-none text-glaze">{r.title}</h2>
+              <h2 className="font-serif text-5xl leading-none text-oxblood">{r.title}</h2>
               <p className="label mt-1 text-ink/40">
                 main · {short(tip.hash)} · {longDate(tip.date)}
                 {r.yield && ` · ${r.yield}`}
@@ -182,31 +182,31 @@ export default function Cookbook() {
                   ["fat", `${rt.fat_pct}%`],
                   ["sugar", `${rt.sugar_pct}%`],
                 ].map(([k, v]) => (
-                  <span key={k} className="label border border-bottle/60 px-1.5 py-0.5 text-[10px] text-bottle">
+                  <span key={k} className="label border border-forest/60 px-1.5 py-0.5 text-[10px] text-forest">
                     {k} {v}
                   </span>
                 ))}
               </div>
               {r.components.map((c) => (
                 <section key={c.id} className="mb-4">
-                  <h3 className="label mb-1 border-b border-glaze/50 pb-0.5 text-[10.5px] text-glaze">{c.name}</h3>
+                  <h3 className="label mb-1 border-b border-oxblood/50 pb-0.5 text-[10.5px] text-oxblood">{c.name}</h3>
                   <table className="mb-2 w-full text-[14px]">
                     <tbody>
                       {c.ingredients.map((i) => (
                         <tr key={i.id}>
                           <td className="py-0.5">{i.name}</td>
-                          <td className="w-16 py-0.5 text-right font-mono text-[12px]">{i.grams} g</td>
-                          <td className="w-14 py-0.5 text-right font-mono text-[11px] text-ink/40">{bakersPct(i, r)}%</td>
+                          <td className="w-16 py-0.5 text-right font-cond text-[12px]">{i.grams} g</td>
+                          <td className="w-14 py-0.5 text-right font-cond text-[11px] text-ink/40">{bakersPct(i, r)}%</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
-                  <ol className="list-decimal space-y-0.5 pl-5 text-[14px] leading-snug marker:font-mono marker:text-[11px] marker:text-glaze/60">
+                  <ol className="list-decimal space-y-0.5 pl-5 text-[14px] leading-snug marker:font-cond marker:text-[11px] marker:text-oxblood/60">
                     {c.steps.map((s) => (
                       <li key={s.id}>
                         {s.text}
                         {(s.duration_min !== undefined || s.temp_c !== undefined) && (
-                          <span className="ml-1 font-mono text-[10.5px] text-ink/40">
+                          <span className="ml-1 font-cond text-[10.5px] text-ink/40">
                             {[minutes(s.duration_min), s.temp_c !== undefined ? `${s.temp_c}°C/${cToF(s.temp_c)}°F` : ""].filter(Boolean).join(" · ")}
                           </span>
                         )}
@@ -216,8 +216,8 @@ export default function Cookbook() {
                 </section>
               ))}
               {t && (
-                <div className="mt-5 border-l-2 border-glaze pl-3">
-                  <p className="font-script text-2xl leading-none text-glaze">tasting notes</p>
+                <div className="mt-5 border-l-2 border-oxblood pl-3">
+                  <p className="font-serif italic text-2xl leading-none text-oxblood">tasting notes</p>
                   <p className="italic">
                     {t.tasting.notes} <span className="not-italic text-ink/50">— {t.tasting.crumb_score}/5</span>
                   </p>

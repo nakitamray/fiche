@@ -1,31 +1,51 @@
 import type { Stamp as StampKind } from "@/lib/ast";
 
-/** small cardstock flag, like the ones on brass clips in a pastry case */
-export function Tag({
+/** the little bent-wire clip that holds a price card on its pick */
+export function WireClip({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 14 22" className={className} aria-hidden>
+      <path
+        d="M4 21 V5.5 a3 3 0 0 1 6 0 V16 a1.8 1.8 0 0 1 -3.6 0 V7"
+        fill="none"
+        stroke="#A3A8AD"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+/**
+ * Hand-lettered price flag, the white card stuck into a pastry:
+ * FORTUNE EGG FLAN, BROWN BUTTER. Flat, with a wire clip on top.
+ */
+export function Flag({
   children,
   tone = "card",
+  tilt = 0,
   className = "",
 }: {
   children: React.ReactNode;
-  tone?: "card" | "glaze" | "bottle";
+  tone?: "card" | "ox" | "forest";
+  tilt?: number;
   className?: string;
 }) {
   const tones = {
-    card: "bg-card text-glaze border-[#e6d8c0]",
-    glaze: "text-[#fbe9d7] border-glaze-deep bg-[linear-gradient(180deg,#a83d34,#86291f)]",
-    bottle: "text-[#eef0e2] border-bottle-deep bg-[linear-gradient(180deg,#45614e,#2c4436)]",
+    card: "border-ink bg-card",
+    ox: "border-oxblood bg-oxblood text-white",
+    forest: "border-forest bg-forest text-white",
   };
   return (
-    <span className={`label inline-flex items-center gap-1.5 rounded-[2px] border px-2 py-1 leading-tight shadow-tag ${tones[tone]} ${className}`}>
-      <span className="h-1.5 w-1.5 rounded-full bg-gradient-to-br from-brass-light to-brass-deep" />
-      {children}
+    <span className={`relative inline-flex pt-2 ${className}`} style={tilt ? { transform: `rotate(${tilt}deg)` } : undefined}>
+      <WireClip className="absolute left-2 top-[-4px] h-[14px] w-[9px]" />
+      <span className={`label inline-block border px-2 py-[3px] text-[11px] leading-tight ${tones[tone]}`}>{children}</span>
     </span>
   );
 }
 
-/** cookie-cutter stamp, pressed slightly crooked: tested / house special / sold out */
+/** ink stamp pressed slightly crooked: tested / house special / sold out */
 export function Stamp({ kind, className = "" }: { kind: StampKind; className?: string }) {
-  const color = kind === "tested" ? "#2f4a3b" : "#93302a";
+  const color = kind === "tested" ? "#364935" : "#6E2226";
   const rot = kind === "tested" ? -9 : kind === "house special" ? 8 : -4;
   const arc = `arc-${kind.replace(" ", "-")}`;
   return (
@@ -37,38 +57,26 @@ export function Stamp({ kind, className = "" }: { kind: StampKind; className?: s
           <feDisplacementMap in="SourceGraphic" in2="n" scale="2.2" />
         </filter>
       </defs>
-      <g filter="url(#ink-rough)" opacity="0.85">
-        <circle cx="60" cy="60" r="56" fill="#fcf3e3" opacity="0.6" />
-        <path
-          d={
-            Array.from({ length: 97 }, (_, i) => {
-              const a = (i / 96) * Math.PI * 2;
-              const r = 54 - 2.4 * (0.5 - 0.5 * Math.cos(a * 18));
-              return `${i ? "L" : "M"}${(60 + r * Math.cos(a)).toFixed(1)},${(60 + r * Math.sin(a)).toFixed(1)}`;
-            }).join("") + "Z"
-          }
-          fill="none"
-          stroke={color}
-          strokeWidth="3"
-        />
-        <circle cx="60" cy="60" r="44" fill="none" stroke={color} strokeWidth="1.4" />
-        <text fontFamily="var(--font-mono)" fontSize="9" letterSpacing="2.4" fill={color}>
+      <g filter="url(#ink-rough)" opacity="0.9">
+        <circle cx="60" cy="60" r="54" fill="none" stroke={color} strokeWidth="3" />
+        <circle cx="60" cy="60" r="45" fill="none" stroke={color} strokeWidth="1.2" />
+        <text fontFamily="var(--font-cond)" fontWeight="600" fontSize="9.5" letterSpacing="2.6" fill={color}>
           <textPath href={`#${arc}`} startOffset="50%" textAnchor="middle">
-            FICHE · MAISON
+            FICHE · BOULANGERIE
           </textPath>
         </text>
         {kind === "house special" ? (
           <>
-            <text x="60" y="64" textAnchor="middle" fontFamily="var(--font-script)" fontSize="24" fill={color}>
-              house
+            <text x="60" y="64" textAnchor="middle" fontFamily="var(--font-cond)" fontWeight="700" fontSize="15" letterSpacing="1" fill={color}>
+              HOUSE
             </text>
-            <text x="60" y="84" textAnchor="middle" fontFamily="var(--font-script)" fontSize="24" fill={color}>
-              special
+            <text x="60" y="81" textAnchor="middle" fontFamily="var(--font-cond)" fontWeight="700" fontSize="15" letterSpacing="1" fill={color}>
+              SPECIAL
             </text>
           </>
         ) : (
-          <text x="60" y="72" textAnchor="middle" fontFamily="var(--font-script)" fontSize="28" fill={color}>
-            {kind}
+          <text x="60" y="72" textAnchor="middle" fontFamily="var(--font-cond)" fontWeight="700" fontSize="17" letterSpacing="1" fill={color}>
+            {kind.toUpperCase()}
           </text>
         )}
       </g>

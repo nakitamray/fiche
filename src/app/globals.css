@@ -2,264 +2,138 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * The whole page is the wall of a corner bakery: cream ceramic tile, 1px
+ * grout, nothing soft. Everything below is flat colour and hard edges.
+ */
+
 :root {
-  --plaster: #f2e6d3;
-  --ink: #3b2a1f;
-  --glaze: #93302a;
-  --brass: #b08a45;
+  --tile: #f3efe6;
+  --grout: #d5cec2;
+  --ink: #1e1a17;
+  --oxblood: #6e2226;
+  --forest: #364935;
+  --tile-size: 36px;
 }
 
 html {
-  background: #ead9bf;
+  background: var(--tile);
 }
 
 body {
   color: var(--ink);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
-  /* limewashed plaster, brighter where the window is (top left) */
-  background:
-    radial-gradient(120% 80% at 8% 0%, #fbf1e0 0%, rgba(251, 241, 224, 0) 55%),
-    radial-gradient(90% 70% at 100% 100%, rgba(196, 150, 100, 0.22), transparent 60%),
-    linear-gradient(180deg, #f3e7d4 0%, #eedfc7 60%, #e8d5b8 100%);
-  background-attachment: fixed;
-}
-
-body::before {
-  /* plaster grain */
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.55;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45  0 0 0 0 .33  0 0 0 0 .2  0 0 0 .09 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  background-color: var(--tile);
+  background-image:
+    linear-gradient(var(--grout) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grout) 1px, transparent 1px);
+  background-size: var(--tile-size) var(--tile-size);
 }
 
 ::selection {
-  background: rgba(217, 142, 58, 0.3);
+  background: var(--oxblood);
+  color: #fff;
 }
 
 @layer components {
-  .card {
-    @apply relative bg-card shadow-card;
-    border-radius: 3px;
-    background-image:
-      linear-gradient(135deg, rgba(255, 246, 226, 0.9), rgba(255, 255, 255, 0) 40%),
-      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .38  0 0 0 0 .25  0 0 0 .05 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-  }
-
-  /* a smoky mirror in a brass frame, like a menu board */
-  .mirror {
-    @apply relative overflow-hidden text-[#f3dfb4] shadow-brass;
-    border-radius: 22px / 26px;
-    background:
-      linear-gradient(118deg, transparent 18%, rgba(255, 236, 200, 0.16) 22%, transparent 30%, transparent 58%, rgba(255, 236, 200, 0.1) 62%, transparent 70%),
-      radial-gradient(120% 90% at 20% 0%, #5b4a3a 0%, #2c231c 55%, #1e1814 100%);
-  }
-  .mirror::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    border-radius: inherit;
-    box-shadow: inset 0 0 0 1px rgba(255, 230, 180, 0.15), inset 0 0 40px rgba(0, 0, 0, 0.5);
-  }
-
   .label {
-    @apply font-mono text-[11px] uppercase tracking-[0.14em];
+    @apply font-cond text-[11.5px] font-semibold uppercase tracking-[0.14em];
+  }
+
+  /* a sheet of white cardstock, pinned flat to the tile */
+  .slip {
+    @apply border border-ink bg-card;
   }
 
   .btn {
-    @apply label inline-flex items-center gap-2 rounded-full border px-4 py-2 transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-40;
+    @apply label inline-flex items-center justify-center gap-2 border px-4 py-2.5 transition-colors disabled:cursor-not-allowed disabled:opacity-40;
   }
-  .btn-glaze {
-    @apply btn border-glaze-deep text-[#fbe9d7];
-    background: linear-gradient(180deg, #b0423a 0%, #93302a 55%, #7d2620 100%);
-    box-shadow: inset 0 1px 0 rgba(255, 210, 190, 0.45), 6px 10px 20px -10px rgba(110, 31, 26, 0.8);
+  .btn-ox {
+    @apply btn border-oxblood bg-oxblood text-white hover:border-oxblood-dark hover:bg-oxblood-dark;
   }
-  .btn-glaze:not(:disabled):hover {
-    filter: brightness(1.08);
-    transform: translateY(-1px);
+  .btn-forest {
+    @apply btn border-forest bg-forest text-white hover:border-forest-dark hover:bg-forest-dark;
   }
-  .btn-bottle {
-    @apply btn border-bottle-deep text-[#eef0e2];
-    background: linear-gradient(180deg, #4b6a55 0%, #2f4a3b 60%, #263d30 100%);
-    box-shadow: inset 0 1px 0 rgba(220, 240, 210, 0.3), 6px 10px 20px -10px rgba(34, 55, 43, 0.8);
-  }
-  .btn-bottle:not(:disabled):hover {
-    filter: brightness(1.1);
-    transform: translateY(-1px);
-  }
-  .btn-ghost {
-    @apply btn border-brass/60 bg-card/60 text-ink hover:border-brass hover:bg-card;
+  .btn-line {
+    @apply btn border-ink bg-card text-ink hover:bg-ink hover:text-card;
   }
 
   .field {
-    @apply w-full rounded-[3px] border border-ink/15 bg-card px-3 py-2 font-serif text-[15px] outline-none transition-colors focus:border-honey;
-    box-shadow: inset 1px 2px 4px rgba(59, 42, 31, 0.06);
+    @apply w-full border border-ink/40 bg-card px-3 py-2 font-serif text-[17px] outline-none transition-colors focus:border-oxblood;
   }
 
   .ink-add {
-    background: linear-gradient(transparent 55%, rgba(47, 74, 59, 0.18) 55%);
+    background-color: rgba(54, 73, 53, 0.13);
   }
   .ink-del {
-    background: linear-gradient(transparent 55%, rgba(147, 48, 42, 0.16) 55%);
+    background-color: rgba(110, 34, 38, 0.1);
     text-decoration: line-through;
-    text-decoration-color: rgba(147, 48, 42, 0.6);
+    text-decoration-color: rgba(110, 34, 38, 0.7);
   }
 
-  /* gilt window lettering */
-  .gilt {
-    background: linear-gradient(176deg, #f7e2a8 0%, #d6ad5e 38%, #a77b35 55%, #e9cc84 70%, #b98d43 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    filter: drop-shadow(1px 1px 0 rgba(90, 58, 20, 0.35)) drop-shadow(4px 6px 8px rgba(110, 70, 20, 0.18));
-  }
-
-  /* glazed zellige-ish tile run, for counters */
-  .tiles {
-    background-color: #8a2b24;
+  /* oxblood vertical subway tile, off-white grout, a hard glaze highlight per tile */
+  .oxtile {
+    background-color: var(--oxblood);
     background-image:
-      linear-gradient(90deg, rgba(60, 14, 10, 0.55) 1.5px, transparent 1.5px),
-      linear-gradient(rgba(60, 14, 10, 0.55) 1.5px, transparent 1.5px),
-      linear-gradient(160deg, rgba(255, 200, 170, 0.22) 0%, transparent 30%, transparent 70%, rgba(0, 0, 0, 0.18) 100%);
-    background-size: 26px 52px, 26px 52px, 100% 100%;
+      linear-gradient(90deg, #efe7da 2px, transparent 2px),
+      linear-gradient(#efe7da 2px, transparent 2px),
+      linear-gradient(90deg, transparent 7px, #7f2c30 7px, #7f2c30 10px, transparent 10px);
+    background-size: 30px 90px, 30px 90px, 30px 90px;
+    background-position: -1px -1px, -1px -1px, 0 0;
   }
 
-  .marble {
-    background-color: #f6f0e8;
-    background-image:
-      linear-gradient(112deg, transparent 29%, rgba(140, 124, 108, 0.16) 30%, rgba(140, 124, 108, 0.05) 31%, transparent 32.5%),
-      linear-gradient(126deg, transparent 57%, rgba(140, 124, 108, 0.12) 57.6%, transparent 59%),
-      linear-gradient(98deg, transparent 74%, rgba(140, 124, 108, 0.1) 74.4%, transparent 75.6%),
-      linear-gradient(140deg, transparent 12%, rgba(140, 124, 108, 0.07) 12.5%, transparent 14%),
-      radial-gradient(80% 60% at 20% 10%, rgba(255, 255, 255, 0.7), transparent 70%),
-      linear-gradient(160deg, #fbf7f1, #ebe1d2);
+  /* forest + cream awning stripe */
+  .awning {
+    background-image: repeating-linear-gradient(90deg, var(--forest) 0 32px, #fffdf8 32px 64px);
   }
-}
 
-/* ---------- the wall ---------- */
-
-.enamel {
-  @apply relative overflow-hidden;
-  border-radius: 22px / 26px;
-  background: linear-gradient(160deg, #fffaf0 0%, #f4ead8 70%, #ecdcc2 100%);
-  box-shadow:
-    inset 0 0 0 7px #fbf4e6,
-    inset 0 0 0 8.5px #2f4a3b,
-    inset 0 0 0 11px #fbf4e6,
-    inset 0 0 0 12px #2f4a3b,
-    0 0 0 1px #7a5a28,
-    0 0 0 3px #e3c684,
-    0 0 0 4px #9c7637,
-    14px 22px 44px -16px rgba(60, 32, 10, 0.55);
-}
-
-.felt {
-  @apply relative overflow-hidden;
-  border-radius: 4px;
-  background: repeating-linear-gradient(180deg, #24382c 0 13px, #1b2b21 13px 14px), #22362a;
-  box-shadow:
-    inset 0 0 0 6px #6b4a2a,
-    inset 0 0 0 8px #3b2716,
-    14px 22px 44px -16px rgba(60, 32, 10, 0.55);
-}
-
-/* window panes of light, soft, falling at an angle */
-.sun-panes {
-  background-image:
-    linear-gradient(118deg, transparent 0 22%, rgba(255, 232, 186, 0.26) 22% 38%, transparent 38% 41%, rgba(255, 232, 186, 0.22) 41% 57%, transparent 57%),
-    linear-gradient(28deg, transparent 0 46%, rgba(40, 20, 5, 0.12) 46% 49%, transparent 49%);
-  background-size: 520px 420px;
-  filter: blur(3px);
-  mix-blend-mode: screen;
-}
-
-.wall-sun {
-  background:
-    linear-gradient(115deg, transparent 0 18%, rgba(255, 228, 176, 0.3) 18% 30%, transparent 30% 32%, rgba(255, 228, 176, 0.26) 32% 44%, transparent 44% 46%, rgba(255, 228, 176, 0.22) 46% 58%, transparent 58%),
-    radial-gradient(60% 50% at 10% 0%, rgba(255, 236, 196, 0.45), transparent 70%);
-  filter: blur(10px);
-}
-
-/* green and cream striped tile, glazed */
-.stripe-tile {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent 30%, rgba(0, 0, 0, 0.12)),
-    repeating-linear-gradient(180deg, transparent 0 39px, rgba(30, 40, 30, 0.25) 39px 40px),
-    repeating-linear-gradient(90deg, #2f5a43 0 24px, rgba(20, 30, 20, 0.35) 24px 25px, #f4eee2 25px 49px, rgba(20, 30, 20, 0.25) 49px 50px);
-}
-
-.checker-floor {
-  background-color: #f2ece1;
-  background-image:
-    linear-gradient(45deg, #1f1d1a 25%, transparent 25%, transparent 75%, #1f1d1a 75%),
-    linear-gradient(45deg, #1f1d1a 25%, transparent 25%, transparent 75%, #1f1d1a 75%);
-  background-size: 44px 44px;
-  background-position: 0 0, 22px 22px;
-}
-
-/* ---------- sunlight ---------- */
-
-.sun-drift {
-  animation: sun-drift 48s ease-in-out infinite alternate;
-  transform-origin: 30% 0%;
-}
-.leaf-sway {
-  animation: leaf-sway 9s ease-in-out infinite alternate;
-  transform-origin: 100% 100%;
-}
-.dust {
-  animation: dust 22s linear infinite;
-}
-
-@keyframes sun-drift {
-  from {
-    transform: translate3d(0, 0, 0) skewX(-14deg);
-  }
-  to {
-    transform: translate3d(-3%, 1.5%, 0) skewX(-18deg);
-  }
-}
-@keyframes leaf-sway {
-  from {
-    transform: rotate(-1.4deg) translate3d(0, 0, 0);
-  }
-  to {
-    transform: rotate(1.8deg) translate3d(-6px, 3px, 0);
-  }
-}
-@keyframes dust {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(-40px, -120px, 0);
+  /* the marble ledge the flags stand on */
+  .ledge {
+    @apply border-y border-ink bg-ledge;
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .sun-drift,
-  .leaf-sway,
-  .dust {
-    animation: none;
-  }
+/* flat range inputs: a line and a square */
+input[type="range"].flat {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 18px;
+  background: transparent;
+}
+input[type="range"].flat::-webkit-slider-runnable-track {
+  height: 2px;
+  background: currentColor;
+}
+input[type="range"].flat::-moz-range-track {
+  height: 2px;
+  background: currentColor;
+}
+input[type="range"].flat::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  margin-top: -6px;
+  background: #fff;
+  border: 2px solid currentColor;
+}
+input[type="range"].flat::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 0;
+  background: #fff;
+  border: 2px solid currentColor;
 }
 
 @media print {
   body {
     background: white;
   }
-  body::before {
-    display: none;
-  }
   .no-print {
     display: none !important;
   }
   .print-page {
     break-after: page;
-    box-shadow: none !important;
   }
 }

@@ -5,6 +5,7 @@ import { diffRecipes, isEmpty, type IngredientDelta, type StepDelta } from "@/li
 import { minutes, signed } from "@/lib/format";
 import { short } from "@/lib/hash";
 import { history, workingTree } from "@/lib/repo";
+import { Flag } from "@/components/Tag";
 
 export type Ref = string; // "working" | "branch:<name>" | <commit hash>
 
@@ -22,7 +23,7 @@ function RefPicker({ repo, value, onChange, label }: { repo: Repo; value: Ref; o
   return (
     <label className="flex min-w-0 flex-1 flex-col gap-1">
       <span className="label text-[9.5px] text-ink/45">{label}</span>
-      <select value={value} onChange={(e) => onChange(e.target.value)} className="field font-mono text-[12px]">
+      <select value={value} onChange={(e) => onChange(e.target.value)} className="field font-cond text-[12px]">
         <option value="working">working tree ({repo.head})</option>
         <optgroup label="branches">
           {Object.keys(repo.branches).map((b) => (
@@ -54,22 +55,22 @@ const RATIO_LABEL: Record<string, [string, string]> = {
 
 function IngredientLine({ d }: { d: IngredientDelta }) {
   const tone =
-    d.change === "added" ? "text-bottle" : d.change === "removed" ? "text-glaze" : d.change === "changed" ? "text-ink" : "text-ink/40";
+    d.change === "added" ? "text-forest" : d.change === "removed" ? "text-oxblood" : d.change === "changed" ? "text-ink" : "text-ink/40";
   return (
     <tr className={`border-b border-dashed border-ink/10 last:border-0 ${tone}`}>
       <td className="py-1 pr-2">
         <span className={d.change === "added" ? "ink-add" : d.change === "removed" ? "ink-del" : ""}>{d.name}</span>
         {d.renamed && <span className="ml-2 text-[13px] italic text-ink/50">was {d.renamed}</span>}
       </td>
-      <td className="whitespace-nowrap py-1 text-right font-mono text-[12.5px] tabular-nums text-ink/45">{d.before ? `${d.before.grams} g` : ""}</td>
+      <td className="whitespace-nowrap py-1 text-right font-cond text-[12.5px] tabular-nums text-ink/45">{d.before ? `${d.before.grams} g` : ""}</td>
       <td className="w-6 text-center text-ink/30">→</td>
-      <td className="whitespace-nowrap py-1 text-right font-mono text-[12.5px] tabular-nums">{d.after ? `${d.after.grams} g` : ""}</td>
-      <td className="whitespace-nowrap py-1 pl-3 text-right font-mono text-[12.5px] tabular-nums">
+      <td className="whitespace-nowrap py-1 text-right font-cond text-[12.5px] tabular-nums">{d.after ? `${d.after.grams} g` : ""}</td>
+      <td className="whitespace-nowrap py-1 pl-3 text-right font-cond text-[12.5px] tabular-nums">
         {d.dGrams !== 0 && (
-          <span className={d.dGrams > 0 ? "ink-add text-bottle" : "ink-del text-glaze"}>{signed(d.dGrams, " g")}</span>
+          <span className={d.dGrams > 0 ? "ink-add text-forest" : "ink-del text-oxblood"}>{signed(d.dGrams, " g")}</span>
         )}
       </td>
-      <td className="whitespace-nowrap hidden py-1 pl-3 text-right font-mono text-[11.5px] tabular-nums text-ink/45 sm:table-cell">
+      <td className="whitespace-nowrap hidden py-1 pl-3 text-right font-cond text-[11.5px] tabular-nums text-ink/45 sm:table-cell">
         {d.dPct !== 0 && signed(d.dPct, "%")}
       </td>
     </tr>
@@ -81,7 +82,7 @@ function StepLine({ d }: { d: StepDelta }) {
   const cls = d.change === "added" ? "ink-add" : d.change === "removed" ? "ink-del" : "";
   return (
     <li className={`border-b border-dashed border-ink/10 py-1.5 last:border-0 ${d.change === "same" ? "text-ink/40" : ""}`}>
-      <span className="label mr-2 text-glaze">{s.action}</span>
+      <span className="label mr-2 text-oxblood">{s.action}</span>
       {d.dTemp !== undefined && <span className="label mr-2 text-ink">{signed(d.dTemp, "°C")}</span>}
       {d.dDuration !== undefined && (
         <span className="label mr-2 text-ink">
@@ -129,14 +130,14 @@ export function DiffView({
 
   return (
     <div className="space-y-5">
-      <div className="card flex flex-col gap-3 p-4 sm:flex-row sm:items-end">
+      <div className="slip flex flex-col gap-3 p-4 sm:flex-row sm:items-end">
         <RefPicker repo={repo} value={from} onChange={setFrom} label="from" />
         <button
           onClick={() => {
             setFrom(to);
             setTo(from);
           }}
-          className="label self-center px-2 py-2 text-ink/50 hover:text-glaze sm:self-end"
+          className="label self-center px-2 py-2 text-ink/50 hover:text-oxblood sm:self-end"
           aria-label="swap"
         >
           ⇄
@@ -147,41 +148,38 @@ export function DiffView({
       {!diff ? (
         <p className="text-ink/60">pick two points to compare.</p>
       ) : isEmpty(diff) ? (
-        <div className="card p-8 text-center">
-          <p className="font-display text-3xl">identical</p>
+        <div className="slip p-8 text-center">
+          <p className="font-serif text-3xl">identical</p>
           <p className="text-ink/60">same recipe, gram for gram.</p>
         </div>
       ) : (
         <>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-3">
             {diff.ratios
               .filter((r) => r.delta !== 0)
               .map((r) => (
-                <span
-                  key={r.key}
-                  className={`label border px-2 py-1 ${r.delta > 0 ? "border-bottle/50 text-bottle" : "border-glaze/50 text-glaze"}`}
-                >
+                <Flag key={r.key} tone={r.delta > 0 ? "forest" : "ox"} tilt={r.delta > 0 ? -1.2 : 1}>
                   {RATIO_LABEL[r.key][0]} {r.before}
                   {RATIO_LABEL[r.key][1]} → {r.after}
                   {RATIO_LABEL[r.key][1]}
-                </span>
+                </Flag>
               ))}
             {ahead > 0 && <span className="label px-2 py-1 text-ink/45">{ahead} bakes apart</span>}
           </div>
 
-          <div className="card p-4">
-            <p className="label mb-1 text-[9.5px] text-ink/45">in short</p>
-            <p className="font-mono text-[13px] leading-relaxed">
+          <div className="slip px-5 pb-5 pt-4">
+            <p className="label mb-3 text-[10px] text-muted">in short</p>
+            <div className="flex flex-wrap gap-x-3 gap-y-3">
               {diff.summary.map((s, i) => (
-                <span key={i} className={`mr-3 inline-block ${s.startsWith("+") ? "text-bottle" : s.startsWith("−") ? "text-glaze" : ""}`}>
+                <Flag key={i} tilt={[-1.4, 0.8, -0.4, 1.6, -1][i % 5]} className={s.startsWith("+") ? "text-forest" : s.startsWith("−") ? "text-oxblood" : ""}>
                   {s}
-                </span>
+                </Flag>
               ))}
-            </p>
+            </div>
           </div>
 
           <label className="label flex items-center gap-2 text-ink/50">
-            <input type="checkbox" checked={showSame} onChange={(e) => setShowSame(e.target.checked)} className="accent-glaze" />
+            <input type="checkbox" checked={showSame} onChange={(e) => setShowSame(e.target.checked)} className="accent-oxblood" />
             show unchanged lines
           </label>
 
@@ -191,10 +189,10 @@ export function DiffView({
               const ings = c.ingredients.filter((d) => showSame || d.change !== "same");
               const steps = c.steps.filter((d) => showSame || d.change !== "same");
               return (
-                <section key={i} className="enamel px-6 py-6 sm:px-8 sm:py-7">
-                  <header className="mb-2 flex items-baseline justify-between border-b border-glaze/40 pb-1.5">
+                <section key={i} className="slip px-6 py-6 sm:px-8 sm:py-7">
+                  <header className="mb-2 flex items-baseline justify-between border-b border-oxblood/40 pb-1.5">
                     <h3
-                      className={`label text-[12px] ${c.change === "added" ? "ink-add text-bottle" : c.change === "removed" ? "ink-del text-glaze" : "text-glaze"}`}
+                      className={`label text-[12px] ${c.change === "added" ? "ink-add text-forest" : c.change === "removed" ? "ink-del text-oxblood" : "text-oxblood"}`}
                     >
                       {c.name}
                     </h3>

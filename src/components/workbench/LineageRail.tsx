@@ -8,7 +8,7 @@ import { layout } from "@/lib/repo";
 const ROW = 58;
 const LANE = 16;
 const PAD = 12;
-const LANE_COLORS = ["#93302a", "#2f4a3b", "#b08a45", "#d98e3a", "#6e1f1a", "#4e6b57"];
+const LANE_COLORS = ["#6E2226", "#364935", "#1E1A17", "#A3A8AD", "#561A1D", "#283727"];
 
 export function LineageRail({
   repo,
@@ -34,13 +34,7 @@ export function LineageRail({
   return (
     <div className="relative" style={{ minHeight: height }}>
       <svg width={width} height={height} className="absolute left-0 top-0" aria-hidden>
-        <defs>
-          <filter id="flour" x="-10%" y="-10%" width="120%" height="120%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" result="n" />
-            <feDisplacementMap in="SourceGraphic" in2="n" scale="2.2" />
-          </filter>
-        </defs>
-        <g filter="url(#flour)">
+        <g>
           {nodes.flatMap((n) =>
             n.commit.parents.map((p) => {
               const parent = pos.get(p);
@@ -50,8 +44,7 @@ export function LineageRail({
               const d = x1 === x2 ? `M${x1} ${y1} L${x2} ${y2}` : `M${x1} ${y1} C${x1} ${y1 + ROW * 0.7}, ${x2} ${y2 - ROW * 0.7}, ${x2} ${y2}`;
               return (
                 <g key={`${n.commit.hash}-${p}`}>
-                  <path d={d} stroke={color} strokeOpacity="0.25" strokeWidth="5" fill="none" strokeLinecap="round" />
-                  <path d={d} stroke={color} strokeWidth="1.6" fill="none" strokeDasharray="1 3.5" strokeLinecap="round" />
+                  <path d={d} stroke={color} strokeWidth="1.5" fill="none" />
                 </g>
               );
             }),
@@ -59,27 +52,29 @@ export function LineageRail({
           {dirty && headHash && pos.get(headHash) && (
             <path
               d={`M${x(headLane)} ${ROW / 2 - 8} L${x(pos.get(headHash)!.lane)} ${y(pos.get(headHash)!.row)}`}
-              stroke="#2a211c"
-              strokeOpacity="0.35"
+              stroke="#1E1A17"
+              strokeOpacity="0.5"
               strokeWidth="1.4"
               strokeDasharray="3 4"
             />
           )}
         </g>
-        {dirty && <circle cx={x(headLane)} cy={ROW / 2 - 8} r="5" fill="#faf7f2" stroke="#2a211c" strokeDasharray="2 2" />}
+        {dirty && <rect x={x(headLane) - 5} y={ROW / 2 - 13} width="10" height="10" fill="#FFFDF8" stroke="#1E1A17" strokeDasharray="2 2" />}
         {nodes.map((n) => {
           const color = LANE_COLORS[n.lane % LANE_COLORS.length];
           const isSel = n.commit.hash === selected;
           return (
             <g key={n.commit.hash}>
-              {isSel && <circle cx={x(n.lane)} cy={y(n.row)} r="10" fill={color} opacity="0.15" />}
-              <circle
-                cx={x(n.lane)}
-                cy={y(n.row)}
-                r={n.commit.parents.length > 1 ? 6.5 : 5.5}
-                fill={n.commit.tasting ? color : "#faf7f2"}
+              {isSel && <rect x={x(n.lane) - 9} y={y(n.row) - 9} width="18" height="18" fill="none" stroke="#1E1A17" strokeWidth="1" />}
+              <rect
+                x={x(n.lane) - 5.5}
+                y={y(n.row) - 5.5}
+                width="11"
+                height="11"
+                fill={n.commit.tasting ? color : "#FFFDF8"}
                 stroke={color}
-                strokeWidth="1.8"
+                strokeWidth="1.5"
+                transform={n.commit.parents.length > 1 ? `rotate(45 ${x(n.lane)} ${y(n.row)})` : undefined}
               />
             </g>
           );
@@ -99,14 +94,14 @@ export function LineageRail({
             <li key={n.commit.hash} style={{ height: ROW, paddingLeft: width }}>
               <button
                 onClick={() => onSelect(n.commit.hash)}
-                className={`group block w-full truncate pr-1 text-left ${isSel ? "text-glaze" : "text-ink hover:text-glaze"}`}
+                className={`group block w-full truncate pr-1 text-left ${isSel ? "text-oxblood" : "text-ink hover:text-oxblood"}`}
                 title={n.commit.message}
               >
                 <span className="label flex items-center gap-1.5 text-ink/45">
-                  <span className={isSel ? "text-glaze" : ""}>{short(n.commit.hash)}</span>
+                  <span className={isSel ? "text-oxblood" : ""}>{short(n.commit.hash)}</span>
                   <span>·</span>
                   <span>{shortDate(n.commit.date)}</span>
-                  {n.commit.tasting && <span className="text-honey">★{n.commit.tasting.crumb_score}</span>}
+                  {n.commit.tasting && <span className="text-oxblood">★{n.commit.tasting.crumb_score}</span>}
                 </span>
                 <span className="block truncate text-[14.5px] leading-snug">{n.commit.message}</span>
                 {n.branches.length > 0 && (
@@ -115,7 +110,7 @@ export function LineageRail({
                       <span
                         key={b}
                         className={`label border px-1 text-[9.5px] leading-[15px] ${
-                          b === repo.head ? "border-glaze bg-glaze text-card" : "border-ink/25 text-ink/60"
+                          b === repo.head ? "border-oxblood bg-oxblood text-card" : "border-ink/25 text-ink/60"
                         }`}
                       >
                         {b}
