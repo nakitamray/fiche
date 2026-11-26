@@ -1,51 +1,59 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { Linen as LinenT, PastryShape as PastryT, PlateStyle as PlateT, Recipe, Repo, Stamp as StampT } from "@/lib/ast";
-import { Linen, PastryShape, PlateStyle, Stamp } from "@/lib/ast";
+import type { Recipe, Repo, Stamp as StampT } from "@/lib/ast";
+import { Stamp as Stamps } from "@/lib/ast";
+import { Stamp } from "@/components/Tag";
 import { short } from "@/lib/hash";
 import { guardrails, ratios, scaleToFlour, setHydration } from "@/lib/math";
 import { DEFAULT_BRANCH, headCommit, isAncestor } from "@/lib/repo";
 
 function Box({ title, children, script }: { title: string; script?: string; children: React.ReactNode }) {
   return (
-    <section className="paper p-4 shadow-card">
-      <h3 className="mb-3 flex items-baseline justify-between border-b border-ink/15 pb-1">
-        <span className="label text-oxblood">{title}</span>
-        {script && <span className="font-script text-lg leading-none text-ink/45">{script}</span>}
+    <section className="card p-4">
+      <h3 className="mb-3 flex items-baseline justify-between border-b border-dashed border-ink/15 pb-1.5">
+        <span className="label text-glaze">{title}</span>
+        {script && <span className="font-script text-xl leading-none text-brass-deep">{script}</span>}
       </h3>
       {children}
     </section>
   );
 }
 
+/** baker's math, written up like the prices on a mirror menu */
 export function ScaleBox({ recipe, edit, readOnly }: { recipe: Recipe; edit: (fn: (r: Recipe) => Recipe) => void; readOnly: boolean }) {
   const r = ratios(recipe);
   const rails = guardrails(recipe);
+  const rows: Array<[string, number]> = [
+    ["hydration", r.hydration_pct],
+    ["fat", r.fat_pct],
+    ["sugar", r.sugar_pct],
+    ["salt", r.salt_pct],
+    ["egg", r.egg_pct],
+    ["yeast", r.leavening_pct],
+  ];
   return (
-    <Box title="baker's math" script="à la balance">
-      <div className="grid grid-cols-3 gap-2 text-center">
-        {[
-          ["hydration", r.hydration_pct],
-          ["fat", r.fat_pct],
-          ["sugar", r.sugar_pct],
-          ["salt", r.salt_pct],
-          ["egg", r.egg_pct],
-          ["yeast", r.leavening_pct],
-        ].map(([k, v]) => (
-          <div key={k as string} className="border border-ink/10 bg-cream/60 py-1.5">
-            <div className="font-display text-2xl leading-none">{v}%</div>
-            <div className="label text-[9px] text-ink/45">{k}</div>
-          </div>
+    <section className="mirror px-6 pb-6 pt-5">
+      <p className="text-center font-script text-[40px] leading-none text-[#e0543f] [text-shadow:0_0_12px_rgba(255,110,80,0.35)]">
+        baker&apos;s math
+      </p>
+      <p className="label mt-1 text-center text-[9.5px] text-[#f6e3b9]/55">per {r.flour_g} g flour</p>
+      <ul className="mt-4 space-y-1.5">
+        {rows.map(([k, v]) => (
+          <li key={k} className="flex items-baseline gap-1 font-mono text-[12.5px] uppercase tracking-[0.08em]">
+            <span className="text-[#f6e3b9]">{k}</span>
+            <span className="flex-1 translate-y-[-0.2em] border-b border-dotted border-[#f6e3b9]/35" />
+            <span className="text-[#e9c46f]">{v}%</span>
+          </li>
         ))}
-      </div>
+      </ul>
 
       {!readOnly && r.flour_g > 0 && (
-        <div className="mt-4 space-y-3">
+        <div className="mt-5 space-y-3 border-t border-[#f6e3b9]/15 pt-4">
           <label className="block">
-            <span className="label flex justify-between text-ink/55">
+            <span className="label flex justify-between text-[#f6e3b9]/70">
               <span>flour</span>
-              <span className="text-ink">{r.flour_g} g</span>
+              <span className="text-[#e9c46f]">{r.flour_g} g</span>
             </span>
             <input
               type="range"
@@ -54,13 +62,13 @@ export function ScaleBox({ recipe, edit, readOnly }: { recipe: Recipe; edit: (fn
               step={10}
               value={r.flour_g}
               onChange={(e) => edit((x) => scaleToFlour(x, Number(e.target.value)))}
-              className="w-full accent-oxblood"
+              className="w-full accent-[#e9c46f]"
             />
           </label>
           <label className="block">
-            <span className="label flex justify-between text-ink/55">
+            <span className="label flex justify-between text-[#f6e3b9]/70">
               <span>hydration</span>
-              <span className="text-ink">{r.hydration_pct}%</span>
+              <span className="text-[#e9c46f]">{r.hydration_pct}%</span>
             </span>
             <input
               type="range"
@@ -69,28 +77,28 @@ export function ScaleBox({ recipe, edit, readOnly }: { recipe: Recipe; edit: (fn
               step={0.5}
               value={r.hydration_pct}
               onChange={(e) => edit((x) => setHydration(x, Number(e.target.value)))}
-              className="w-full accent-awning"
+              className="w-full accent-[#e0543f]"
             />
           </label>
-          <p className="text-[13px] italic leading-snug text-ink/50">
+          <p className="text-[13px] italic leading-snug text-[#f6e3b9]/55">
             flour scales everything. hydration only moves water and milk — eggs and butter stay put.
           </p>
         </div>
       )}
 
       {rails.length > 0 && (
-        <ul className="mt-4 space-y-2">
+        <ul className="mt-4 space-y-2 border-t border-[#f6e3b9]/15 pt-4">
           {rails.map((g) => (
             <li
               key={g.id}
-              className={`border-l-2 pl-2 text-[14px] leading-snug ${g.severity === "warn" ? "border-oxblood text-oxblood" : "border-crust text-ink/75"}`}
+              className={`border-l-2 pl-2 text-[14px] leading-snug ${g.severity === "warn" ? "border-[#e0543f] text-[#f3b7a6]" : "border-[#e9c46f] text-[#f6e3b9]/80"}`}
             >
               {g.text}
             </li>
           ))}
         </ul>
       )}
-    </Box>
+    </section>
   );
 }
 
@@ -135,7 +143,7 @@ export function CommitBox({
               key={n}
               type="button"
               onClick={() => setScore(score === n ? 0 : n)}
-              className={`h-6 w-6 rounded-full border text-[11px] ${n <= score ? "border-crust bg-crust text-parchment" : "border-ink/20 text-ink/30"}`}
+              className={`h-6 w-6 rounded-full border text-[11px] ${n <= score ? "border-honey bg-honey text-card" : "border-ink/20 text-ink/30"}`}
               aria-label={`${n} of 5`}
             >
               {n}
@@ -146,7 +154,7 @@ export function CommitBox({
               +½
             </button>
           )}
-          {score > 0 && <span className="label ml-auto text-crust">{score}</span>}
+          {score > 0 && <span className="label ml-auto text-honey">{score}</span>}
         </div>
         <textarea
           value={notes}
@@ -156,7 +164,7 @@ export function CommitBox({
           className="field resize-none text-[14px]"
         />
         <div className="flex flex-wrap gap-2">
-          <button type="submit" className="btn-ox" disabled={logOnly && !score && !notes}>
+          <button type="submit" className="btn-glaze" disabled={logOnly && !score && !notes}>
             {logOnly ? "log bake" : "commit"}
           </button>
           {dirty && (
@@ -196,7 +204,7 @@ export function BranchBox({
           <li key={b} className="flex items-center gap-2">
             <button
               onClick={() => b !== repo.head && onCheckout(b)}
-              className={`label flex-1 truncate text-left ${b === repo.head ? "text-oxblood" : "text-ink/70 hover:text-oxblood"}`}
+              className={`label flex-1 truncate text-left ${b === repo.head ? "text-glaze" : "text-ink/70 hover:text-glaze"}`}
               title={dirty && b !== repo.head ? "switching drops uncommitted changes" : undefined}
             >
               {b === repo.head ? "● " : "○ "}
@@ -204,7 +212,7 @@ export function BranchBox({
             </button>
             <span className="label text-ink/35">{short(h)}</span>
             {b !== DEFAULT_BRANCH && b !== repo.head && (
-              <button onClick={() => onDelete(b)} className="label text-ink/25 hover:text-oxblood" aria-label={`delete ${b}`}>
+              <button onClick={() => onDelete(b)} className="label text-ink/25 hover:text-glaze" aria-label={`delete ${b}`}>
                 ×
               </button>
             )}
@@ -220,7 +228,7 @@ export function BranchBox({
         className="flex gap-2"
       >
         <input value={name} onChange={(e) => setName(e.target.value)} placeholder="eggless-test" className="field font-mono text-[13px]" />
-        <button className="btn-green shrink-0" disabled={!name.trim()}>
+        <button className="btn-bottle shrink-0" disabled={!name.trim()}>
           fork
         </button>
       </form>
@@ -228,7 +236,7 @@ export function BranchBox({
         <div className="mt-3 flex flex-wrap items-center gap-2">
           <span className="label text-ink/50">merge into {repo.head}:</span>
           {mergeable.map((b) => (
-            <button key={b} onClick={() => onMerge(b)} className="label border border-awning/40 px-1.5 py-0.5 text-awning hover:bg-awning hover:text-parchment">
+            <button key={b} onClick={() => onMerge(b)} className="label border border-bottle/40 px-1.5 py-0.5 text-bottle hover:bg-bottle hover:text-card">
               {b}
             </button>
           ))}
@@ -264,7 +272,7 @@ export function GraftBox({ repo, library, onGraft }: { repo: Repo; library: Repo
             </option>
           ))}
         </select>
-        <button className="btn-green" disabled={!chosen || !tip} onClick={() => chosen && tip && source && onGraft(source.slug, tip.hash, chosen.id)}>
+        <button className="btn-bottle" disabled={!chosen || !tip} onClick={() => chosen && tip && source && onGraft(source.slug, tip.hash, chosen.id)}>
           graft into working tree
         </button>
       </div>
@@ -272,43 +280,38 @@ export function GraftBox({ repo, library, onGraft }: { repo: Repo; library: Repo
   );
 }
 
-export function LookBox({
+export function StampBox({
   repo,
-  onChange,
+  onStamp,
   onDelete,
 }: {
   repo: Repo;
-  onChange: (patch: Partial<Pick<Repo, "linen" | "plate" | "pastry" | "stamp">>) => void;
+  onStamp: (stamp: StampT | undefined) => void;
   onDelete: () => void;
 }) {
-  const pick = <T extends string>(label: string, value: T | undefined, options: readonly T[], set: (v: T) => void, none?: string) => (
-    <label className="flex items-center justify-between gap-2">
-      <span className="label text-ink/50">{label}</span>
-      <select
-        value={value ?? ""}
-        onChange={(e) => set(e.target.value as T)}
-        className="label border-b border-ink/20 bg-transparent py-0.5 text-ink outline-none"
-      >
-        {none && <option value="">{none}</option>}
-        {options.map((o) => (
-          <option key={o}>{o}</option>
-        ))}
-      </select>
-    </label>
-  );
   return (
-    <Box title="the plate" script="presentation">
-      <div className="space-y-2">
-        {pick<LinenT>("linen", repo.linen, Linen.options, (linen) => onChange({ linen }))}
-        {pick<PlateT>("plate", repo.plate, PlateStyle.options, (plate) => onChange({ plate }))}
-        {pick<PastryT>("pastry", repo.pastry, PastryShape.options, (pastry) => onChange({ pastry }))}
-        {pick<StampT>("stamp", repo.stamp, Stamp.options, (stamp) => onChange({ stamp: (stamp || undefined) as StampT | undefined }), "none")}
+    <Box title="stamp it" script="when it's ready">
+      <div className="grid grid-cols-3 gap-2">
+        {Stamps.options.map((k) => {
+          const on = repo.stamp === k;
+          return (
+            <button
+              key={k}
+              onClick={() => onStamp(on ? undefined : k)}
+              className={`rounded-full transition-all ${on ? "scale-105 opacity-100" : "opacity-35 grayscale hover:opacity-70"}`}
+              aria-pressed={on}
+              aria-label={k}
+            >
+              <Stamp kind={k} className="h-auto w-full" />
+            </button>
+          );
+        })}
       </div>
       <button
         onClick={() => {
           if (window.confirm(`throw out ${headCommit(repo).recipe.title} and all its history?`)) onDelete();
         }}
-        className="label mt-4 text-ink/35 hover:text-oxblood"
+        className="label mt-4 text-ink/35 hover:text-glaze"
       >
         delete recipe
       </button>

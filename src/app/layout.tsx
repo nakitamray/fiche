@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Newsreader } from "next/font/google";
-import { Storefront } from "@/components/Storefront";
+import { Shell } from "@/components/Shell";
 import { LibraryProvider } from "@/lib/store";
 import "./globals.css";
 
@@ -40,7 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${display.variable} ${mono.variable} ${script.variable} ${serif.variable}`}>
       <body className="font-serif">
         <LibraryProvider>
-          <Storefront>{children}</Storefront>
+          <Shell>{children}</Shell>
         </LibraryProvider>
       </body>
     </html>

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { Recipe, Repo } from "@/lib/ast";
@@ -18,18 +19,18 @@ import {
   workingTree,
 } from "@/lib/repo";
 import { useLibrary } from "@/lib/store";
-import { Plate } from "@/components/Plate";
 import { Stamp, Tag } from "@/components/Tag";
 import { DiffView, type Ref } from "@/components/workbench/DiffView";
 import { LineageRail } from "@/components/workbench/LineageRail";
 import { RatioSheet } from "@/components/workbench/RatioSheet";
-import { BranchBox, CommitBox, GraftBox, LookBox, ScaleBox } from "@/components/workbench/SidePanel";
+import { BranchBox, CommitBox, GraftBox, ScaleBox, StampBox } from "@/components/workbench/SidePanel";
 
 type Tab = "sheet" | "diff";
 
 export function Workbench({ slug }: { slug: string }) {
   const { repo: get, update, remove, library, ready } = useLibrary();
   const repo = get(slug);
+  const router = useRouter();
   const [tab, setTab] = useState<Tab>("sheet");
   const [viewing, setViewing] = useState<string | undefined>();
   const [from, setFrom] = useState<Ref>("branch:main");
@@ -39,10 +40,10 @@ export function Workbench({ slug }: { slug: string }) {
 
   if (!repo) {
     return (
-      <div className="paper mx-auto max-w-md p-10 text-center shadow-card">
+      <div className="card mx-auto max-w-md p-10 text-center">
         <p className="font-display text-3xl">{ready ? "not in the case" : "…"}</p>
         {ready && (
-          <Link href="/" className="label mt-3 inline-block text-oxblood underline">
+          <Link href="/" className="label mt-3 inline-block text-glaze underline">
             back to the vitrine
           </Link>
         )}
@@ -78,13 +79,9 @@ export function Workbench({ slug }: { slug: string }) {
     <div>
       {/* header */}
       <section className="mb-6 flex flex-wrap items-end gap-5">
-        <div className="relative hidden h-28 w-28 shrink-0 items-center justify-center sm:flex">
-          <div className={`linen linen-${repo.linen} absolute inset-0`} />
-          <Plate plate={repo.plate} pastry={repo.pastry} className="relative h-24 w-24" />
-        </div>
         <div className="min-w-0 flex-1">
-          <Link href="/" className="label text-ink/45 hover:text-oxblood">
-            ← vitrine
+          <Link href="/" className="label text-ink/45 hover:text-glaze">
+            ← the counter
           </Link>
           {readOnly ? (
             <h1 className="font-display text-5xl leading-[0.95] sm:text-6xl">{recipe.title}</h1>
@@ -92,15 +89,15 @@ export function Workbench({ slug }: { slug: string }) {
             <input
               value={recipe.title}
               onChange={(e) => edit((r) => ({ ...r, title: e.target.value }))}
-              className="block w-full bg-transparent font-display text-5xl leading-[0.95] outline-none focus:bg-parchment/60 sm:text-6xl"
+              className="block w-full bg-transparent font-display text-5xl leading-[0.95] outline-none focus:bg-card/60 sm:text-6xl"
               aria-label="title"
             />
           )}
           <div className="mt-2 flex flex-wrap items-center gap-2">
-            <Tag tone="ox">{repo.head}</Tag>
+            <Tag tone="glaze">{repo.head}</Tag>
             <Tag>{short(head.hash)}</Tag>
             {recipe.yield && <Tag>{recipe.yield}</Tag>}
-            {dirty && <Tag tone="green">uncommitted</Tag>}
+            {dirty && <Tag tone="bottle">uncommitted</Tag>}
             <span className="label text-ink/45">
               {recipe.components.length} components · {minutes(recipe.components.flatMap((c) => c.steps).reduce((n, s) => n + (s.duration_min ?? 0), 0))} start to finish
             </span>
@@ -110,12 +107,12 @@ export function Workbench({ slug }: { slug: string }) {
       </section>
 
       {viewed && (
-        <div className="mb-5 flex flex-wrap items-center gap-3 border border-oxblood/30 bg-oxblood/5 px-4 py-2.5">
-          <span className="label text-oxblood">viewing {short(viewed.hash)}</span>
+        <div className="mb-5 flex flex-wrap items-center gap-3 border border-glaze/30 bg-glaze/5 px-4 py-2.5">
+          <span className="label text-glaze">viewing {short(viewed.hash)}</span>
           <span className="text-[15px] italic">“{viewed.message}” — {longDate(viewed.date)}</span>
           {viewed.tasting && (
             <span className="text-[14px] text-ink/70">
-              <span className="font-script text-lg text-oxblood">notes</span> {viewed.tasting.notes} ({viewed.tasting.crumb_score}/5)
+              <span className="font-script text-lg text-glaze">notes</span> {viewed.tasting.notes} ({viewed.tasting.crumb_score}/5)
             </span>
           )}
           <span className="ml-auto flex gap-2">
@@ -142,7 +139,7 @@ export function Workbench({ slug }: { slug: string }) {
             >
               fork here
             </button>
-            <button onClick={() => setViewing(undefined)} className="btn-ox">
+            <button onClick={() => setViewing(undefined)} className="btn-glaze">
               back to {repo.head}
             </button>
           </span>
@@ -165,7 +162,7 @@ export function Workbench({ slug }: { slug: string }) {
               <button
                 key={t}
                 onClick={() => setTab(t)}
-                className={`label -mb-px border-b-2 px-3 py-2 ${tab === t ? "border-oxblood text-oxblood" : "border-transparent text-ink/50 hover:text-ink"}`}
+                className={`label -mb-px border-b-2 px-3 py-2 ${tab === t ? "border-glaze text-glaze" : "border-transparent text-ink/50 hover:text-ink"}`}
               >
                 {t === "sheet" ? "recipe" : "diff"}
               </button>
@@ -219,7 +216,14 @@ export function Workbench({ slug }: { slug: string }) {
               }}
             />
           )}
-          <LookBox repo={repo} onChange={(patch) => update(slug, (r) => ({ ...r, ...patch }))} onDelete={() => { remove(slug); window.location.href = "/"; }} />
+          <StampBox
+            repo={repo}
+            onStamp={(stamp) => update(slug, (r) => ({ ...r, stamp }))}
+            onDelete={() => {
+              remove(slug);
+              router.push("/");
+            }}
+          />
         </aside>
       </div>
 
@@ -227,7 +231,7 @@ export function Workbench({ slug }: { slug: string }) {
         <AnimatePresence>
           {toast && (
             <motion.div initial={{ y: 40, opacity: 0, rotate: -2 }} animate={{ y: 0, opacity: 1, rotate: -1 }} exit={{ y: 40, opacity: 0 }}>
-              <Tag tone="ox" className="px-4 py-2 text-[12px]">
+              <Tag tone="glaze" className="px-4 py-2 text-[12px]">
                 {toast}
               </Tag>
             </motion.div>

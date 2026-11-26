@@ -5,16 +5,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        cream: "#F4EFE6",
-        grout: "#E2D9C8",
-        parchment: "#FAF7F2",
-        oxblood: { DEFAULT: "#6B2428", deep: "#521A1D", soft: "#8C3A3E" },
-        awning: { DEFAULT: "#3B4D3B", deep: "#2C3A2C", soft: "#5A6E57" },
-        ink: "#2A211C",
-        crust: "#B7793A",
-        walnut: "#5B3A26",
-        celadon: "#A9BFA8",
-        butter: "#F2D98B",
+        plaster: { DEFAULT: "#F2E6D3", deep: "#E6D3B6", shade: "#D9C2A0" },
+        card: "#FCF7EF",
+        ink: "#3B2A1F",
+        glaze: { DEFAULT: "#93302A", deep: "#6E1F1A", light: "#B9483B" },
+        brass: { DEFAULT: "#B08A45", light: "#E3C684", deep: "#7A5A28" },
+        bottle: { DEFAULT: "#2F4A3B", deep: "#22372B", light: "#4E6B57" },
+        honey: "#D98E3A",
+        sun: "#FFE2B3",
+        marble: "#F6F0E8",
       },
       fontFamily: {
         display: ["var(--font-display)", "Georgia", "serif"],
@@ -23,8 +22,11 @@ export default {
         script: ["var(--font-script)", "cursive"],
       },
       boxShadow: {
-        card: "0 1px 0 rgba(42,33,28,0.06), 0 8px 24px -12px rgba(42,33,28,0.25)",
-        tag: "0 2px 0 rgba(42,33,28,0.08), 0 6px 14px -6px rgba(42,33,28,0.35)",
+        // sun is up and to the left, so everything casts down and right
+        card: "1px 1px 0 rgba(255,255,255,0.7) inset, 0 1px 2px rgba(59,42,31,0.08), 12px 18px 40px -18px rgba(92,52,20,0.38)",
+        lift: "1px 1px 0 rgba(255,255,255,0.7) inset, 0 2px 4px rgba(59,42,31,0.1), 22px 32px 60px -22px rgba(92,52,20,0.45)",
+        tag: "0 1px 1px rgba(59,42,31,0.15), 6px 8px 14px -6px rgba(92,52,20,0.4)",
+        brass: "0 0 0 1px #7A5A28, 0 0 0 3px #E3C684, 0 0 0 4px #9C7637, 14px 22px 44px -16px rgba(60,32,10,0.55)",
       },
     },
   },

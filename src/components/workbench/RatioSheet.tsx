@@ -39,7 +39,7 @@ function NumberCell({
       value={value ?? ""}
       placeholder={placeholder}
       onChange={(e) => onChange(e.target.value === "" ? undefined : Number(e.target.value))}
-      className={`w-full bg-transparent text-right tabular-nums outline-none focus:bg-parchment ${className}`}
+      className={`w-full bg-transparent text-right tabular-nums outline-none focus:bg-card ${className}`}
     />
   );
 }
@@ -70,17 +70,17 @@ function IngredientRow({
             value={ing.name}
             onChange={(e) => onChange({ ...ing, name: e.target.value })}
             onBlur={(e) => ing.kind === "other" && onChange({ ...ing, name: e.target.value, kind: guessKind(e.target.value) })}
-            className="w-full bg-transparent outline-none focus:bg-parchment"
+            className="w-full bg-transparent outline-none focus:bg-card"
           />
         )}
-        {ing.replaces && <span className="block font-script text-lg leading-none text-oxblood/80">instead of {ing.replaces}</span>}
-        {ing.source && <span className="label block text-[9.5px] text-crust">check: “{ing.source}”</span>}
+        {ing.replaces && <span className="block font-script text-lg leading-none text-glaze/80">instead of {ing.replaces}</span>}
+        {ing.source && <span className="label block text-[9.5px] text-honey">check: “{ing.source}”</span>}
       </td>
       <td className="w-20 py-1.5 pr-1 font-mono text-[13px]">
         <NumberCell value={ing.grams} readOnly={readOnly} onChange={(n) => onChange({ ...ing, grams: n ?? 0, source: undefined })} />
       </td>
       <td className="label w-6 py-1.5 text-ink/40">g</td>
-      <td className="w-20 py-1.5 pr-1 font-mono text-[13px] text-oxblood">
+      <td className="w-20 py-1.5 pr-1 font-mono text-[13px] text-glaze">
         <NumberCell
           value={pct}
           step={0.1}
@@ -88,7 +88,7 @@ function IngredientRow({
           onChange={(n) => onChange({ ...ing, grams: round(((n ?? 0) * flour) / 100, 1), source: undefined })}
         />
       </td>
-      <td className="label w-6 py-1.5 text-oxblood/50">%</td>
+      <td className="label w-6 py-1.5 text-glaze/50">%</td>
       <td className="hidden w-28 py-1.5 pl-2 sm:table-cell">
         {readOnly ? (
           <span className="label text-ink/50">{ing.kind}</span>
@@ -106,7 +106,7 @@ function IngredientRow({
       </td>
       {!readOnly && (
         <td className="w-6 py-1.5 text-right">
-          <button onClick={onRemove} className="label text-ink/25 hover:text-oxblood" aria-label={`remove ${ing.name}`}>
+          <button onClick={onRemove} className="label text-ink/25 hover:text-glaze" aria-label={`remove ${ing.name}`}>
             ×
           </button>
         </td>
@@ -130,16 +130,16 @@ function StepRow({
 }) {
   return (
     <li className="grid grid-cols-[1.75rem_1fr] gap-x-2 border-b border-dashed border-ink/10 py-2 last:border-0">
-      <span className="font-display text-2xl leading-none text-oxblood/70">{n}</span>
+      <span className="font-display text-2xl leading-none text-glaze/70">{n}</span>
       <div>
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
           {readOnly ? (
-            <span className="label text-oxblood">{step.action}</span>
+            <span className="label text-glaze">{step.action}</span>
           ) : (
             <input
               value={step.action}
               onChange={(e) => onChange({ ...step, action: e.target.value })}
-              className="label w-28 bg-transparent text-oxblood outline-none focus:bg-parchment"
+              className="label w-28 bg-transparent text-glaze outline-none focus:bg-card"
             />
           )}
           {readOnly ? (
@@ -165,7 +165,7 @@ function StepRow({
                 </span>
                 °C{step.temp_c !== undefined && <span className="text-ink/30">/{cToF(step.temp_c)}°F</span>}
               </span>
-              <button onClick={onRemove} className="label ml-auto text-ink/25 hover:text-oxblood" aria-label="remove step">
+              <button onClick={onRemove} className="label ml-auto text-ink/25 hover:text-glaze" aria-label="remove step">
                 ×
               </button>
             </>
@@ -178,7 +178,7 @@ function StepRow({
             value={step.text}
             rows={Math.max(1, Math.ceil(step.text.length / 70))}
             onChange={(e) => onChange({ ...step, text: e.target.value })}
-            className="mt-0.5 w-full resize-none bg-transparent text-[15px] leading-snug outline-none focus:bg-parchment"
+            className="mt-0.5 w-full resize-none bg-transparent text-[15px] leading-snug outline-none focus:bg-card"
           />
         )}
       </div>
@@ -192,23 +192,23 @@ export function RatioSheet({ recipe, edit, readOnly }: { recipe: Recipe; edit: E
   return (
     <div className="space-y-6">
       {recipe.components.map((c) => (
-        <section key={c.id} className="paper p-4 shadow-card sm:p-5">
-          <header className="mb-2 flex flex-wrap items-baseline justify-between gap-2 border-b border-oxblood/40 pb-1.5">
+        <section key={c.id} className="enamel px-6 py-6 sm:px-8 sm:py-7">
+          <header className="mb-2 flex flex-wrap items-baseline justify-between gap-2 border-b border-glaze/40 pb-1.5">
             {readOnly ? (
-              <h3 className="label text-[12px] text-oxblood">{c.name}</h3>
+              <h3 className="label text-[12px] text-glaze">{c.name}</h3>
             ) : (
               <input
                 value={c.name}
                 onChange={(e) => edit((r) => patchComponent(r, c.id, (x) => ({ ...x, name: e.target.value })))}
-                className="label min-w-0 flex-1 bg-transparent text-[12px] text-oxblood outline-none focus:bg-parchment"
+                className="label min-w-0 flex-1 bg-transparent text-[12px] text-glaze outline-none focus:bg-card"
               />
             )}
             <span className="flex items-center gap-3">
-              {c.origin && <span className="font-script text-lg leading-none text-awning">grafted from {c.origin.repo}</span>}
+              {c.origin && <span className="font-script text-lg leading-none text-bottle">grafted from {c.origin.repo}</span>}
               {!readOnly && (
                 <button
                   onClick={() => edit((r) => ({ ...r, components: r.components.filter((x) => x.id !== c.id) }))}
-                  className="label text-ink/30 hover:text-oxblood"
+                  className="label text-ink/30 hover:text-glaze"
                 >
                   remove
                 </button>
@@ -260,7 +260,7 @@ export function RatioSheet({ recipe, edit, readOnly }: { recipe: Recipe; edit: E
                   })),
                 )
               }
-              className="label mt-1 text-ink/45 hover:text-oxblood"
+              className="label mt-1 text-ink/45 hover:text-glaze"
             >
               + ingredient
             </button>
@@ -290,7 +290,7 @@ export function RatioSheet({ recipe, edit, readOnly }: { recipe: Recipe; edit: E
                       patchComponent(r, c.id, (x) => ({ ...x, steps: [...x.steps, { id: uid("step"), action: "step", text: "" }] })),
                     )
                   }
-                  className="label mt-1 text-ink/45 hover:text-oxblood"
+                  className="label mt-1 text-ink/45 hover:text-glaze"
                 >
                   + step
                 </button>

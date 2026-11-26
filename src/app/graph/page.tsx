@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AXIS_NAMES, flavorMap } from "@/lib/flavor";
 import { useLibrary } from "@/lib/store";
-import { Plate } from "@/components/Plate";
 
 const CARD_W = 168;
 const CARD_H = 96;
@@ -85,11 +84,11 @@ export default function FlavorGraph() {
     <div>
       <section className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="font-script text-3xl leading-none text-oxblood">what tastes like what</p>
+          <p className="font-script text-3xl leading-none text-glaze">what tastes like what</p>
           <h1 className="font-display text-5xl leading-[0.95] sm:text-6xl">flavor map</h1>
           <p className="mt-2 max-w-xl text-ink/70">
             every recipe&apos;s main line, placed by what&apos;s in it and what the tasting notes say. close cards taste alike; the
-            flour trails link each bake to its nearest neighbours. drag them around.
+            brass trails link each bake to its nearest neighbours. drag them around.
           </p>
         </div>
         <button onClick={() => setPos({})} className="btn-ghost">
@@ -99,11 +98,12 @@ export default function FlavorGraph() {
 
       <div
         ref={board}
-        className="walnut relative h-[640px] touch-none select-none overflow-hidden rounded-[3px] shadow-card"
+        className="marble relative h-[640px] touch-none select-none overflow-hidden rounded-[6px] shadow-lift ring-1 ring-brass/50"
         onPointerMove={onMove}
         onPointerUp={() => (drag.current = null)}
         onPointerLeave={() => (drag.current = null)}
       >
+        <div className="wall-sun pointer-events-none absolute inset-0" />
         <svg className="pointer-events-none absolute inset-0 h-full w-full">
           <defs>
             <filter id="dust">
@@ -123,7 +123,7 @@ export default function FlavorGraph() {
                   y1={pa.y + CARD_H / 2}
                   x2={pb.x + CARD_W / 2}
                   y2={pb.y + CARD_H / 2}
-                  stroke="#f6efe2"
+                  stroke="#9c7637"
                   strokeWidth={lit ? 3.5 : 2.5}
                   strokeDasharray="0.5 5"
                   strokeLinecap="round"
@@ -135,7 +135,6 @@ export default function FlavorGraph() {
 
         {points.map((p, i) => {
           const { x, y } = at(p.slug, i);
-          const repo = library.repos.find((r) => r.slug === p.slug)!;
           const max = Math.max(1, ...AXIS_NAMES.map((a) => p.axes[a]));
           return (
             <div
@@ -149,12 +148,12 @@ export default function FlavorGraph() {
               onPointerEnter={() => setHover(p.slug)}
               onPointerLeave={() => setHover(undefined)}
             >
-              <div className="flex h-full gap-2 border border-[#e4d6bd] bg-[#fbf6ea] p-2 shadow-tag">
-                <Plate plate={repo.plate} pastry={repo.pastry} size={46} className="shrink-0 self-center" />
+              <div className="card flex h-full gap-2 p-2.5 shadow-tag">
+                <span className="mt-1 h-2.5 w-2.5 shrink-0 rounded-full shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.3)]" style={{ background: AXIS_INK[p.dominant] }} />
                 <div className="flex min-w-0 flex-1 flex-col">
                   <Link
                     href={`/r/${p.slug}`}
-                    className="font-display text-[17px] leading-[1.05] text-ink hover:text-oxblood"
+                    className="font-display text-[17px] leading-[1.05] text-ink hover:text-glaze"
                     onPointerDown={(e) => e.stopPropagation()}
                     draggable={false}
                   >

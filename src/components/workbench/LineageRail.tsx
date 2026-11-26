@@ -8,7 +8,7 @@ import { layout } from "@/lib/repo";
 const ROW = 58;
 const LANE = 16;
 const PAD = 12;
-const LANE_COLORS = ["#6b2428", "#3b4d3b", "#b7793a", "#5b78b5", "#8c3a6e", "#6f8a5b"];
+const LANE_COLORS = ["#93302a", "#2f4a3b", "#b08a45", "#d98e3a", "#6e1f1a", "#4e6b57"];
 
 export function LineageRail({
   repo,
@@ -99,14 +99,14 @@ export function LineageRail({
             <li key={n.commit.hash} style={{ height: ROW, paddingLeft: width }}>
               <button
                 onClick={() => onSelect(n.commit.hash)}
-                className={`group block w-full truncate pr-1 text-left ${isSel ? "text-oxblood" : "text-ink hover:text-oxblood"}`}
+                className={`group block w-full truncate pr-1 text-left ${isSel ? "text-glaze" : "text-ink hover:text-glaze"}`}
                 title={n.commit.message}
               >
                 <span className="label flex items-center gap-1.5 text-ink/45">
-                  <span className={isSel ? "text-oxblood" : ""}>{short(n.commit.hash)}</span>
+                  <span className={isSel ? "text-glaze" : ""}>{short(n.commit.hash)}</span>
                   <span>·</span>
                   <span>{shortDate(n.commit.date)}</span>
-                  {n.commit.tasting && <span className="text-crust">★{n.commit.tasting.crumb_score}</span>}
+                  {n.commit.tasting && <span className="text-honey">★{n.commit.tasting.crumb_score}</span>}
                 </span>
                 <span className="block truncate text-[14.5px] leading-snug">{n.commit.message}</span>
                 {n.branches.length > 0 && (
@@ -115,7 +115,7 @@ export function LineageRail({
                       <span
                         key={b}
                         className={`label border px-1 text-[9.5px] leading-[15px] ${
-                          b === repo.head ? "border-oxblood bg-oxblood text-parchment" : "border-ink/25 text-ink/60"
+                          b === repo.head ? "border-glaze bg-glaze text-card" : "border-ink/25 text-ink/60"
                         }`}
                       >
                         {b}

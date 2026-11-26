@@ -54,7 +54,7 @@ const RATIO_LABEL: Record<string, [string, string]> = {
 
 function IngredientLine({ d }: { d: IngredientDelta }) {
   const tone =
-    d.change === "added" ? "text-awning" : d.change === "removed" ? "text-oxblood" : d.change === "changed" ? "text-ink" : "text-ink/40";
+    d.change === "added" ? "text-bottle" : d.change === "removed" ? "text-glaze" : d.change === "changed" ? "text-ink" : "text-ink/40";
   return (
     <tr className={`border-b border-dashed border-ink/10 last:border-0 ${tone}`}>
       <td className="py-1 pr-2">
@@ -66,7 +66,7 @@ function IngredientLine({ d }: { d: IngredientDelta }) {
       <td className="whitespace-nowrap py-1 text-right font-mono text-[12.5px] tabular-nums">{d.after ? `${d.after.grams} g` : ""}</td>
       <td className="whitespace-nowrap py-1 pl-3 text-right font-mono text-[12.5px] tabular-nums">
         {d.dGrams !== 0 && (
-          <span className={d.dGrams > 0 ? "ink-add text-awning" : "ink-del text-oxblood"}>{signed(d.dGrams, " g")}</span>
+          <span className={d.dGrams > 0 ? "ink-add text-bottle" : "ink-del text-glaze"}>{signed(d.dGrams, " g")}</span>
         )}
       </td>
       <td className="whitespace-nowrap hidden py-1 pl-3 text-right font-mono text-[11.5px] tabular-nums text-ink/45 sm:table-cell">
@@ -81,7 +81,7 @@ function StepLine({ d }: { d: StepDelta }) {
   const cls = d.change === "added" ? "ink-add" : d.change === "removed" ? "ink-del" : "";
   return (
     <li className={`border-b border-dashed border-ink/10 py-1.5 last:border-0 ${d.change === "same" ? "text-ink/40" : ""}`}>
-      <span className="label mr-2 text-oxblood">{s.action}</span>
+      <span className="label mr-2 text-glaze">{s.action}</span>
       {d.dTemp !== undefined && <span className="label mr-2 text-ink">{signed(d.dTemp, "°C")}</span>}
       {d.dDuration !== undefined && (
         <span className="label mr-2 text-ink">
@@ -129,14 +129,14 @@ export function DiffView({
 
   return (
     <div className="space-y-5">
-      <div className="paper flex flex-col gap-3 p-4 shadow-card sm:flex-row sm:items-end">
+      <div className="card flex flex-col gap-3 p-4 sm:flex-row sm:items-end">
         <RefPicker repo={repo} value={from} onChange={setFrom} label="from" />
         <button
           onClick={() => {
             setFrom(to);
             setTo(from);
           }}
-          className="label self-center px-2 py-2 text-ink/50 hover:text-oxblood sm:self-end"
+          className="label self-center px-2 py-2 text-ink/50 hover:text-glaze sm:self-end"
           aria-label="swap"
         >
           ⇄
@@ -147,7 +147,7 @@ export function DiffView({
       {!diff ? (
         <p className="text-ink/60">pick two points to compare.</p>
       ) : isEmpty(diff) ? (
-        <div className="paper p-8 text-center shadow-card">
+        <div className="card p-8 text-center">
           <p className="font-display text-3xl">identical</p>
           <p className="text-ink/60">same recipe, gram for gram.</p>
         </div>
@@ -159,7 +159,7 @@ export function DiffView({
               .map((r) => (
                 <span
                   key={r.key}
-                  className={`label border px-2 py-1 ${r.delta > 0 ? "border-awning/50 text-awning" : "border-oxblood/50 text-oxblood"}`}
+                  className={`label border px-2 py-1 ${r.delta > 0 ? "border-bottle/50 text-bottle" : "border-glaze/50 text-glaze"}`}
                 >
                   {RATIO_LABEL[r.key][0]} {r.before}
                   {RATIO_LABEL[r.key][1]} → {r.after}
@@ -169,11 +169,11 @@ export function DiffView({
             {ahead > 0 && <span className="label px-2 py-1 text-ink/45">{ahead} bakes apart</span>}
           </div>
 
-          <div className="paper p-4 shadow-card">
+          <div className="card p-4">
             <p className="label mb-1 text-[9.5px] text-ink/45">in short</p>
             <p className="font-mono text-[13px] leading-relaxed">
               {diff.summary.map((s, i) => (
-                <span key={i} className={`mr-3 inline-block ${s.startsWith("+") ? "text-awning" : s.startsWith("−") ? "text-oxblood" : ""}`}>
+                <span key={i} className={`mr-3 inline-block ${s.startsWith("+") ? "text-bottle" : s.startsWith("−") ? "text-glaze" : ""}`}>
                   {s}
                 </span>
               ))}
@@ -181,7 +181,7 @@ export function DiffView({
           </div>
 
           <label className="label flex items-center gap-2 text-ink/50">
-            <input type="checkbox" checked={showSame} onChange={(e) => setShowSame(e.target.checked)} className="accent-oxblood" />
+            <input type="checkbox" checked={showSame} onChange={(e) => setShowSame(e.target.checked)} className="accent-glaze" />
             show unchanged lines
           </label>
 
@@ -191,10 +191,10 @@ export function DiffView({
               const ings = c.ingredients.filter((d) => showSame || d.change !== "same");
               const steps = c.steps.filter((d) => showSame || d.change !== "same");
               return (
-                <section key={i} className="paper p-4 shadow-card sm:p-5">
-                  <header className="mb-2 flex items-baseline justify-between border-b border-oxblood/40 pb-1.5">
+                <section key={i} className="enamel px-6 py-6 sm:px-8 sm:py-7">
+                  <header className="mb-2 flex items-baseline justify-between border-b border-glaze/40 pb-1.5">
                     <h3
-                      className={`label text-[12px] ${c.change === "added" ? "ink-add text-awning" : c.change === "removed" ? "ink-del text-oxblood" : "text-oxblood"}`}
+                      className={`label text-[12px] ${c.change === "added" ? "ink-add text-bottle" : c.change === "removed" ? "ink-del text-glaze" : "text-glaze"}`}
                     >
                       {c.name}
                     </h3>
